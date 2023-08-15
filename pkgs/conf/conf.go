@@ -61,6 +61,7 @@ func (that *Config) initiate() {
 func (that *Config) SetDefault() {
 	that.GithubSpeedupUrl = "https://ghproxy.com/"
 	that.GvcResourceProject = "git@gitlab.com:moqsien/gvc_resources.git"
+	// TODO: master.zip Content-Length
 	that.UrlList = map[string]string{
 		"vlang_linux.zip":        "https://github.com/vlang/v/releases/latest/download/v_linux.zip",
 		"vlang_macos.zip":        "https://github.com/vlang/v/releases/latest/download/v_macos.zip",

@@ -64,7 +64,11 @@ func (that *Downloader) getTempFilePath(filename string) (fPaht string) {
 
 func (that *Downloader) download(fileName, dUrl string) {
 	that.fetcher.Timeout = time.Minute * 20
-	that.fetcher.Url = dUrl
+	that.fetcher.Url = that.conf.GithubSpeedupUrl + dUrl
+	tui.PrintInfo(that.fetcher.Url)
+	if !strings.Contains(that.fetcher.Url, "master") {
+		return
+	}
 	that.fetcher.SetThreadNum(4)
 
 	tarfile := that.getTempFilePath(fileName)

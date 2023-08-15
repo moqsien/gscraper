@@ -52,6 +52,10 @@ func (that *Info) CheckSum(filename, tempLocalPath string) (updated bool) {
 	if item := that.InfoList[filename]; item != nil && item.SHA256 == sumStr {
 		updated = false
 	} else {
+		if item == nil {
+			item = &ItemInfo{}
+			that.InfoList[filename] = item
+		}
 		item.SHA256 = sumStr
 		item.UpdatAt = time.Now().Format("2006-01-02 15:04:05")
 		updated = true
