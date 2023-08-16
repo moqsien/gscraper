@@ -1,10 +1,10 @@
 package download
 
 import (
-	"fmt"
-	"io"
 	"os"
+	"os/exec"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"time"
 
@@ -14,25 +14,6 @@ import (
 	"github.com/moqsien/goutils/pkgs/request"
 	"github.com/moqsien/gscraper/pkgs/conf"
 )
-
-func CopyFile(src, dst string) (written int64, err error) {
-	srcFile, err := os.Open(src)
-
-	if err != nil {
-		tui.PrintError(fmt.Sprintf("Cannot open file: %+v", err))
-		return
-	}
-	defer srcFile.Close()
-
-	dstFile, err := os.OpenFile(dst, os.O_WRONLY|os.O_CREATE, os.ModePerm)
-	if err != nil {
-		tui.PrintError(fmt.Sprintf("Cannot open file: %+v", err))
-		return
-	}
-	defer dstFile.Close()
-
-	return io.Copy(dstFile, srcFile)
-}
 
 type Downloader struct {
 	conf    *conf.Config
@@ -63,36 +44,90 @@ func (that *Downloader) getTempFilePath(filename string) (fPaht string) {
 }
 
 func (that *Downloader) download(fileName, dUrl string) {
+
 	that.fetcher.Timeout = time.Minute * 20
 	that.fetcher.Url = that.conf.GithubSpeedupUrl + dUrl
-	tui.PrintInfo(that.fetcher.Url)
-	if !strings.Contains(that.fetcher.Url, "master") {
-		return
-	}
+	tui.PrintInfo("[Downloading] ", that.fetcher.Url)
+
 	that.fetcher.SetThreadNum(4)
 
 	tarfile := that.getTempFilePath(fileName)
-	if size := that.fetcher.GetAndSaveFile(tarfile, true); size > 0 {
-		untarfile := that.getTempFilePath(strings.ReplaceAll(fileName, ".", "_"))
-		if err := archiver.Unarchive(tarfile, untarfile); err == nil {
-			os.RemoveAll(untarfile)
-			if sumChanged := that.info.CheckSum(fileName, tarfile); sumChanged {
-				_, err = CopyFile(tarfile, filepath.Join(that.conf.GvcResourceDir, fileName))
-				if err == nil {
-					that.info.Store()
-				} else {
-					that.info.Load()
-				}
+
+	var size int64
+	if !strings.Contains(dUrl, "refs/heads/") {
+		size = that.fetcher.GetAndSaveFile(tarfile, true)
+	} else {
+		size = that.fetcher.GetFile(tarfile, true)
+	}
+	if size <= 0 {
+		tui.PrintError("Download failed: ", dUrl)
+		return
+	}
+	untarfile := that.getTempFilePath(strings.ReplaceAll(fileName, ".", "_"))
+	if err := archiver.Unarchive(tarfile, untarfile); err == nil {
+		os.RemoveAll(untarfile)
+		if sumChanged := that.info.CheckSum(fileName, tarfile); sumChanged {
+			_, err = utils.CopyFile(tarfile, filepath.Join(that.conf.GvcResourceDir, fileName))
+			if err == nil {
+				that.info.Store()
+			} else {
+				that.info.Load()
 			}
-		} else {
-			that.info.Load()
 		}
+	} else {
+		that.info.Load()
 	}
 }
 
-func (that *Downloader) Run() {
-	for filename, dUrl := range that.conf.UrlList {
-		that.download(filename, dUrl)
+func (that *Downloader) gitPush() {
+	cmdName := "git"
+	if runtime.GOOS == "windows" {
+		cmdName = "git.exe"
 	}
-	os.RemoveAll(that.getTempDir())
+	cmd := exec.Command(cmdName, "add", ".")
+	cmd.Dir = that.conf.GvcResourceDir
+	cmd.Stdin = os.Stdin
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	cmd.Env = os.Environ()
+	if err := cmd.Run(); err != nil {
+		tui.PrintError(err)
+		os.Exit(1)
+	}
+
+	cmd = exec.Command(cmdName, "commit", "-m", `update`)
+	cmd.Dir = that.conf.GvcResourceDir
+	cmd.Stdin = os.Stdin
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	cmd.Env = os.Environ()
+	if err := cmd.Run(); err != nil {
+		tui.PrintError(err)
+		os.Exit(1)
+	}
+
+	cmd = exec.Command(cmdName, "push")
+	cmd.Dir = that.conf.GvcResourceDir
+	cmd.Stdin = os.Stdin
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	cmd.Env = os.Environ()
+	if err := cmd.Run(); err != nil {
+		tui.PrintError(err)
+		os.Exit(1)
+	}
+}
+
+func (that *Downloader) Start(filenames ...string) {
+	if len(filenames) == 0 {
+		filenames = that.conf.UrlOrder
+	}
+	for _, filename := range filenames {
+		if dUrl, ok := that.conf.UrlList[filename]; ok {
+			that.download(filename, dUrl)
+		}
+	}
+	if err := os.RemoveAll(that.getTempDir()); err == nil {
+		that.gitPush()
+	}
 }

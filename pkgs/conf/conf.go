@@ -1,6 +1,7 @@
 package conf
 
 import (
+	"fmt"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -24,6 +25,7 @@ type Config struct {
 	GvcResourceDir     string            `json,koanf:"gvc_resource_dir"`
 	GvcResourceProject string            `json,koanf:"gvc_resource_project"`
 	UrlList            map[string]string `json,koanf:"url_list"`
+	UrlOrder           []string          `json,koanf:"url_order"`
 	koanfer            *koanfer.JsonKoanfer
 }
 
@@ -63,6 +65,10 @@ func (that *Config) SetDefault() {
 	that.GvcResourceProject = "git@gitlab.com:moqsien/gvc_resources.git"
 	// TODO: master.zip Content-Length
 	that.UrlList = map[string]string{
+		"geoip.db":               "https://ghproxy.com/?q=https://github.com/lyc8503/sing-box-rules/releases/latest/download/geoip.db",
+		"geosite.db":             "https://ghproxy.com/?q=https://github.com/lyc8503/sing-box-rules/releases/latest/download/geosite.db",
+		"geoip.dat":              "https://ghproxy.com/?q=https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat",
+		"geosite.dat":            "https://ghproxy.com/?q=https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat",
 		"vlang_linux.zip":        "https://github.com/vlang/v/releases/latest/download/v_linux.zip",
 		"vlang_macos.zip":        "https://github.com/vlang/v/releases/latest/download/v_macos.zip",
 		"vlang_windows.zip":      "https://github.com/vlang/v/releases/latest/download/v_windows.zip",
@@ -79,6 +85,27 @@ func (that *Config) SetDefault() {
 		"pyenv_unix.zip":         "https://github.com/pyenv/pyenv/archive/refs/heads/master.zip",
 		"pyenv_win.zip":          "https://github.com/pyenv-win/pyenv-win/archive/refs/heads/master.zip",
 	}
+	that.UrlOrder = []string{
+		"geoip.db",
+		"geosite.db",
+		"geoip.dat",
+		"geosite.dat",
+		"vlang_linux.zip",
+		"vlang_macos.zip",
+		"vlang_windows.zip",
+		"typst_arm_macos.tar.xz",
+		"typst_x64_macos.tar.xz",
+		"typst_arm_linux.tar.xz",
+		"typst_x64_linux.tar.xz",
+		"typst_x64_windows.zip",
+		"nvim_linux64.tar.gz",
+		"nvim_macos.tar.gz",
+		"nvim_win64.zip",
+		"vcpkg.zip",
+		"vcpkg_tool.zip",
+		"pyenv_unix.zip",
+		"pyenv_win.zip",
+	}
 	that.ReadGvcResourceDir()
 }
 
@@ -92,7 +119,14 @@ func (that *Config) ReadGvcResourceDir() {
 	that.check()
 
 	projectName := "gvc_resources"
+
 	if !strings.Contains(that.GvcResourceDir, projectName) {
+		gPath := filepath.Join(that.GvcResourceDir, projectName, ".git")
+		if ok, _ := utils.PathIsExist(gPath); ok {
+			tui.PrintInfo(fmt.Sprintf("%s already exists.", projectName))
+			that.GvcResourceDir = filepath.Join(that.GvcResourceDir, projectName)
+			return
+		}
 		cmdName := "git"
 		if runtime.GOOS == "windows" {
 			cmdName = "git.exe"
@@ -109,4 +143,33 @@ func (that *Config) ReadGvcResourceDir() {
 		}
 		that.GvcResourceDir = filepath.Join(that.GvcResourceDir, projectName)
 	}
+}
+
+func (that *Config) Add(dUrl string) {
+	sList := strings.Split(dUrl, "/")
+	filename := sList[len(sList)-1]
+	if _, ok := that.UrlList[filename]; !ok {
+		that.UrlOrder = append(that.UrlOrder, filename)
+	}
+	that.UrlList[filename] = dUrl
+	that.koanfer.Save(that)
+}
+
+func (that *Config) Remove(filename string) {
+	for idx, name := range that.UrlOrder {
+		if name == filename {
+			if idx != len(that.UrlOrder)-1 {
+				that.UrlOrder = append(that.UrlOrder[:idx], that.UrlOrder[idx+1:]...)
+			} else {
+				that.UrlOrder = that.UrlOrder[:idx]
+			}
+			break
+		}
+	}
+	delete(that.UrlList, filename)
+	that.koanfer.Save(that)
+}
+
+func (that *Config) Show() {
+	tui.Cyan(strings.Join(append([]string{"[Files to download]:"}, that.UrlOrder...), "  "))
 }

@@ -48,7 +48,7 @@ func (that *Info) initiate() {
 }
 
 func (that *Info) CheckSum(filename, tempLocalPath string) (updated bool) {
-	sumStr := ComputeSum(tempLocalPath, SumType)
+	sumStr := utils.ComputeSum(tempLocalPath, SumType)
 	if item := that.InfoList[filename]; item != nil && item.SHA256 == sumStr {
 		updated = false
 	} else {
