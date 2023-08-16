@@ -126,9 +126,9 @@ func (that *Config) ReadGvcResourceDir() {
 	input.Render()
 	if item.Value == "" {
 		tui.PrintInfo("[gvc_resource dir]: ", that.GvcResourceDir)
-		return
+	} else {
+		that.GvcResourceDir = item.Value
 	}
-	that.GvcResourceDir = item.Value
 
 	projectName := "gvc_resources"
 
@@ -138,6 +138,8 @@ func (that *Config) ReadGvcResourceDir() {
 			tui.PrintInfo(fmt.Sprintf("%s already exists.", projectName))
 			that.GvcResourceDir = filepath.Join(that.GvcResourceDir, projectName)
 			return
+		} else {
+			os.MkdirAll(that.GvcResourceDir, 0777)
 		}
 		cmdName := "git"
 		if runtime.GOOS == "windows" {
