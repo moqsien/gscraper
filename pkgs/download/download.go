@@ -1,6 +1,7 @@
 package download
 
 import (
+	"fmt"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -43,13 +44,48 @@ func (that *Downloader) getTempFilePath(filename string) (fPaht string) {
 	return filepath.Join(tempDir, filename)
 }
 
-func (that *Downloader) getLatestTag() {}
+func (that *Downloader) getLatestTag(dUrl string) (tag string) {
+	var _url string
+	if strings.Contains(dUrl, "/releases") {
+		_url = strings.Split(dUrl, "/releases")[0]
+	}
+	if strings.Contains(dUrl, "/archive") {
+		_url = strings.Split(dUrl, "/archive")[0]
+	}
+	if _url == "" {
+		return
+	}
+	_url = fmt.Sprintf("%s/releases/latest", _url)
+	that.fetcher.SetUrl(that.conf.GithubSpeedupUrl + _url)
+	that.fetcher.Timeout = time.Minute
+	that.fetcher.RetryTimes = 2
+	if resp := that.fetcher.Get(); resp != nil {
+		rUrl := resp.RawResponse.Request.URL.String()
+		sList := strings.Split(rUrl, "/")
+		return sList[len(sList)-1]
+	}
+	return
+}
+
+func (that *Downloader) FindUrl(dUrl string) (rUrl string) {
+	if strings.Contains(dUrl, "/protobuf/") && strings.Contains(dUrl, `%s`) {
+		tag := strings.TrimLeft(that.getLatestTag(dUrl), "v")
+		rUrl = fmt.Sprintf(dUrl, tag)
+	} else {
+		rUrl = dUrl
+	}
+	return
+}
 
 func (that *Downloader) download(fileName, dUrl string) {
+	_url := that.FindUrl(dUrl)
+	if _url == "" {
+		return
+	}
 
 	that.fetcher.Timeout = time.Minute * 20
-	that.fetcher.Url = that.conf.GithubSpeedupUrl + dUrl
-	tui.PrintInfo("[Downloading] ", that.fetcher.Url)
+	that.fetcher.Url = that.conf.GithubSpeedupUrl + _url
+	tui.PrintInfo("[>>>] ", that.fetcher.Url)
 
 	that.fetcher.SetThreadNum(4)
 

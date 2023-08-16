@@ -50,7 +50,7 @@ func (that *Config) check() {
 func (that *Config) initiate() {
 	if ok, _ := utils.PathIsExist(GScraperConfigPath); !ok {
 		that.SetDefault()
-		that.koanfer.Save(that)
+		that.Save()
 	}
 	if ok, _ := utils.PathIsExist(GScraperConfigPath); ok {
 		that.koanfer.Load(that)
@@ -64,10 +64,10 @@ func (that *Config) SetDefault() {
 	that.GithubSpeedupUrl = "https://ghproxy.com/"
 	that.GvcResourceProject = "git@gitlab.com:moqsien/gvc_resources.git"
 	that.UrlList = map[string]string{
-		"geoip.db":                        "https://ghproxy.com/?q=https://github.com/lyc8503/sing-box-rules/releases/latest/download/geoip.db",
-		"geosite.db":                      "https://ghproxy.com/?q=https://github.com/lyc8503/sing-box-rules/releases/latest/download/geosite.db",
-		"geoip.dat":                       "https://ghproxy.com/?q=https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat",
-		"geosite.dat":                     "https://ghproxy.com/?q=https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat",
+		"geoip.db":                        "https://github.com/lyc8503/sing-box-rules/releases/latest/download/geoip.db",
+		"geosite.db":                      "https://github.com/lyc8503/sing-box-rules/releases/latest/download/geosite.db",
+		"geoip.dat":                       "https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat",
+		"geosite.dat":                     "https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat",
 		"protoc_win64.zip":                "https://github.com/protocolbuffers/protobuf/releases/latest/download/protoc-%s-win64.zip",
 		"protoc_linux_x86_64.zip":         "https://github.com/protocolbuffers/protobuf/releases/latest/download/protoc-%s-linux-x86_64.zip",
 		"protoc_linux_aarch_64.zip":       "https://github.com/protocolbuffers/protobuf/releases/latest/download/protoc-%s-linux-aarch_64.zip",
@@ -122,6 +122,10 @@ func (that *Config) ReadGvcResourceDir() {
 		item,
 	})
 	input.Render()
+	if item.Value == "" {
+		tui.PrintInfo("[gvc_resource dir]: ", that.GvcResourceDir)
+		return
+	}
 	that.GvcResourceDir = item.Value
 	that.check()
 
@@ -159,7 +163,7 @@ func (that *Config) Add(dUrl string) {
 		that.UrlOrder = append(that.UrlOrder, filename)
 	}
 	that.UrlList[filename] = dUrl
-	that.koanfer.Save(that)
+	that.Save()
 }
 
 func (that *Config) Remove(filename string) {
@@ -175,9 +179,13 @@ func (that *Config) Remove(filename string) {
 	}
 	delete(that.UrlList, filename)
 	os.RemoveAll(filepath.Join(that.GvcResourceDir, filename))
-	that.koanfer.Save(that)
+	that.Save()
 }
 
 func (that *Config) Show() {
 	tui.Cyan(strings.Join(append([]string{"[Files to download]:"}, that.UrlOrder...), "  "))
+}
+
+func (that *Config) Save() {
+	that.koanfer.Save(that)
 }

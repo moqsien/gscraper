@@ -81,6 +81,7 @@ func init() {
 		Action: func(ctx *cli.Context) error {
 			cnf := conf.NewConfig()
 			cnf.SetDefault()
+			cnf.Save()
 			return nil
 		},
 	})
