@@ -43,6 +43,8 @@ func (that *Downloader) getTempFilePath(filename string) (fPaht string) {
 	return filepath.Join(tempDir, filename)
 }
 
+func (that *Downloader) getLatestTag() {}
+
 func (that *Downloader) download(fileName, dUrl string) {
 
 	that.fetcher.Timeout = time.Minute * 20

@@ -63,33 +63,40 @@ func (that *Config) initiate() {
 func (that *Config) SetDefault() {
 	that.GithubSpeedupUrl = "https://ghproxy.com/"
 	that.GvcResourceProject = "git@gitlab.com:moqsien/gvc_resources.git"
-	// TODO: master.zip Content-Length
 	that.UrlList = map[string]string{
-		"geoip.db":               "https://ghproxy.com/?q=https://github.com/lyc8503/sing-box-rules/releases/latest/download/geoip.db",
-		"geosite.db":             "https://ghproxy.com/?q=https://github.com/lyc8503/sing-box-rules/releases/latest/download/geosite.db",
-		"geoip.dat":              "https://ghproxy.com/?q=https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat",
-		"geosite.dat":            "https://ghproxy.com/?q=https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat",
-		"vlang_linux.zip":        "https://github.com/vlang/v/releases/latest/download/v_linux.zip",
-		"vlang_macos.zip":        "https://github.com/vlang/v/releases/latest/download/v_macos.zip",
-		"vlang_windows.zip":      "https://github.com/vlang/v/releases/latest/download/v_windows.zip",
-		"typst_arm_macos.tar.xz": "https://github.com/typst/typst/releases/latest/download/typst-aarch64-apple-darwin.tar.xz",
-		"typst_x64_macos.tar.xz": "https://github.com/typst/typst/releases/latest/download/typst-x86_64-apple-darwin.tar.xz",
-		"typst_arm_linux.tar.xz": "https://github.com/typst/typst/releases/latest/download/typst-aarch64-unknown-linux-musl.tar.xz",
-		"typst_x64_linux.tar.xz": "https://github.com/typst/typst/releases/latest/download/typst-x86_64-unknown-linux-musl.tar.xz",
-		"typst_x64_windows.zip":  "https://github.com/typst/typst/releases/latest/download/typst-x86_64-pc-windows-msvc.zip",
-		"nvim_linux64.tar.gz":    "https://github.com/neovim/neovim/releases/download/stable/nvim-linux64.tar.gz",
-		"nvim_macos.tar.gz":      "https://github.com/neovim/neovim/releases/download/stable/nvim-macos.tar.gz",
-		"nvim_win64.zip":         "https://github.com/neovim/neovim/releases/download/stable/nvim-win64.zip",
-		"vcpkg.zip":              "https://github.com/microsoft/vcpkg/archive/refs/heads/master.zip",
-		"vcpkg_tool.zip":         "https://github.com/microsoft/vcpkg-tool/archive/refs/heads/main.zip",
-		"pyenv_unix.zip":         "https://github.com/pyenv/pyenv/archive/refs/heads/master.zip",
-		"pyenv_win.zip":          "https://github.com/pyenv-win/pyenv-win/archive/refs/heads/master.zip",
+		"geoip.db":                        "https://ghproxy.com/?q=https://github.com/lyc8503/sing-box-rules/releases/latest/download/geoip.db",
+		"geosite.db":                      "https://ghproxy.com/?q=https://github.com/lyc8503/sing-box-rules/releases/latest/download/geosite.db",
+		"geoip.dat":                       "https://ghproxy.com/?q=https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat",
+		"geosite.dat":                     "https://ghproxy.com/?q=https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat",
+		"protoc_win64.zip":                "https://github.com/protocolbuffers/protobuf/releases/latest/download/protoc-%s-win64.zip",
+		"protoc_linux_x86_64.zip":         "https://github.com/protocolbuffers/protobuf/releases/latest/download/protoc-%s-linux-x86_64.zip",
+		"protoc_linux_aarch_64.zip":       "https://github.com/protocolbuffers/protobuf/releases/latest/download/protoc-%s-linux-aarch_64.zip",
+		"protoc_osx_universal_binary.zip": "https://github.com/protocolbuffers/protobuf/releases/latest/download/protoc-%s-osx-universal_binary.zip",
+		"vlang_linux.zip":                 "https://github.com/vlang/v/releases/latest/download/v_linux.zip",
+		"vlang_macos.zip":                 "https://github.com/vlang/v/releases/latest/download/v_macos.zip",
+		"vlang_windows.zip":               "https://github.com/vlang/v/releases/latest/download/v_windows.zip",
+		"typst_arm_macos.tar.xz":          "https://github.com/typst/typst/releases/latest/download/typst-aarch64-apple-darwin.tar.xz",
+		"typst_x64_macos.tar.xz":          "https://github.com/typst/typst/releases/latest/download/typst-x86_64-apple-darwin.tar.xz",
+		"typst_arm_linux.tar.xz":          "https://github.com/typst/typst/releases/latest/download/typst-aarch64-unknown-linux-musl.tar.xz",
+		"typst_x64_linux.tar.xz":          "https://github.com/typst/typst/releases/latest/download/typst-x86_64-unknown-linux-musl.tar.xz",
+		"typst_x64_windows.zip":           "https://github.com/typst/typst/releases/latest/download/typst-x86_64-pc-windows-msvc.zip",
+		"nvim_linux64.tar.gz":             "https://github.com/neovim/neovim/releases/download/stable/nvim-linux64.tar.gz",
+		"nvim_macos.tar.gz":               "https://github.com/neovim/neovim/releases/download/stable/nvim-macos.tar.gz",
+		"nvim_win64.zip":                  "https://github.com/neovim/neovim/releases/download/stable/nvim-win64.zip",
+		"vcpkg.zip":                       "https://github.com/microsoft/vcpkg/archive/refs/heads/master.zip",
+		"vcpkg_tool.zip":                  "https://github.com/microsoft/vcpkg-tool/archive/refs/heads/main.zip",
+		"pyenv_unix.zip":                  "https://github.com/pyenv/pyenv/archive/refs/heads/master.zip",
+		"pyenv_win.zip":                   "https://github.com/pyenv-win/pyenv-win/archive/refs/heads/master.zip",
 	}
 	that.UrlOrder = []string{
 		"geoip.db",
 		"geosite.db",
 		"geoip.dat",
 		"geosite.dat",
+		"protoc_win64.zip",
+		"protoc_linux_x86_64.zip",
+		"protoc_linux_aarch_64.zip",
+		"protoc_osx_universal_binary.zip",
 		"vlang_linux.zip",
 		"vlang_macos.zip",
 		"vlang_windows.zip",
@@ -167,6 +174,7 @@ func (that *Config) Remove(filename string) {
 		}
 	}
 	delete(that.UrlList, filename)
+	os.RemoveAll(filepath.Join(that.GvcResourceDir, filename))
 	that.koanfer.Save(that)
 }
 
