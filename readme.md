@@ -60,5 +60,5 @@ https://github.com/pyenv-win/pyenv-win/archive/refs/heads/master.zip
 
 ## 如何安装？
 ```bash
-go install github.com/moqsien/gscraper
+go install github.com/moqsien/gscraper@latest
 ```
