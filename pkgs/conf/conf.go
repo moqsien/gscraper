@@ -156,12 +156,24 @@ func (that *Config) ReadGvcResourceDir() {
 	}
 }
 
-func (that *Config) Add(dUrl string) {
+func (that *Config) getName(dUrl string) string {
 	sList := strings.Split(dUrl, "/")
 	filename := sList[len(sList)-1]
-	if _, ok := that.UrlList[filename]; !ok {
-		that.UrlOrder = append(that.UrlOrder, filename)
+	if strings.Contains(filename, "master") || strings.Contains(filename, "main") {
+		sList = strings.Split(dUrl, "github.com/")
+		if len(sList) == 2 {
+			s := sList[1]
+			sList = strings.Split(s, "/")
+			if len(sList) > 1 {
+				return fmt.Sprintf("%s.zip", sList[1])
+			}
+		}
 	}
+	return filename
+}
+
+func (that *Config) Add(dUrl string) {
+	filename := that.getName(dUrl)
 	that.UrlList[filename] = dUrl
 	that.Save()
 }
