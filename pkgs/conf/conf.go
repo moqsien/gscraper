@@ -41,8 +41,9 @@ func NewConfig() *Config {
 }
 
 func (that *Config) check() {
-	if ok, _ := utils.PathIsExist(filepath.Join(that.GvcResourceDir, ".git")); !ok || that.GvcResourceDir == "" {
-		tui.PrintError("gvc_resource_dir is required.")
+	if ok, _ := utils.PathIsExist(filepath.Join(that.GvcResourceDir, ".git")); that.GvcResourceDir == "" || !ok {
+		tui.PrintWarning("gvc_resource_dir is required. [gvc_resuorces_dir]: ", that.GvcResourceDir)
+		that.ReadGvcResourceDir()
 		os.Exit(1)
 	}
 }
