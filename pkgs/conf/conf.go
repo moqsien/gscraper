@@ -113,6 +113,7 @@ func (that *Config) SetDefault() {
 		"pyenv_unix.zip",
 		"pyenv_win.zip",
 	}
+	that.Save()
 	that.ReadGvcResourceDir()
 }
 
@@ -127,7 +128,6 @@ func (that *Config) ReadGvcResourceDir() {
 		return
 	}
 	that.GvcResourceDir = item.Value
-	that.check()
 
 	projectName := "gvc_resources"
 
@@ -154,6 +154,7 @@ func (that *Config) ReadGvcResourceDir() {
 		}
 		that.GvcResourceDir = filepath.Join(that.GvcResourceDir, projectName)
 	}
+	that.check()
 }
 
 func (that *Config) getName(dUrl string) string {
