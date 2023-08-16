@@ -16,6 +16,18 @@ import (
 	"github.com/moqsien/gscraper/pkgs/conf"
 )
 
+func IsFileCompressebBySuffix(filename string) bool {
+	suffixes := []string{
+		".tar", ".gz", ".zip", ".xz", ".7z", ".rar",
+	}
+	for _, suffix := range suffixes {
+		if strings.HasSuffix(filename, suffix) {
+			return true
+		}
+	}
+	return false
+}
+
 type Downloader struct {
 	conf    *conf.Config
 	info    *Info
@@ -102,18 +114,19 @@ func (that *Downloader) download(fileName, dUrl string) {
 		return
 	}
 	untarfile := that.getTempFilePath(strings.ReplaceAll(fileName, ".", "_"))
-	if err := archiver.Unarchive(tarfile, untarfile); err == nil {
+	toCopy := true
+	if IsFileCompressebBySuffix(untarfile) && archiver.Unarchive(tarfile, untarfile) != nil {
+		toCopy = false
+	}
+	if toCopy {
 		os.RemoveAll(untarfile)
 		if sumChanged := that.info.CheckSum(fileName, tarfile); sumChanged {
-			_, err = utils.CopyFile(tarfile, filepath.Join(that.conf.GvcResourceDir, fileName))
-			if err == nil {
+			if _, err := utils.CopyFile(tarfile, filepath.Join(that.conf.GvcResourceDir, fileName)); err == nil {
 				that.info.Store()
 			} else {
 				that.info.Load()
 			}
 		}
-	} else {
-		that.info.Load()
 	}
 }
 

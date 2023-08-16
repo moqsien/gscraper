@@ -129,7 +129,6 @@ func (that *Config) ReadGvcResourceDir() {
 	} else {
 		that.GvcResourceDir = item.Value
 	}
-
 	projectName := "gvc_resources"
 
 	if !strings.Contains(that.GvcResourceDir, projectName) {
@@ -157,7 +156,7 @@ func (that *Config) ReadGvcResourceDir() {
 		}
 		that.GvcResourceDir = filepath.Join(that.GvcResourceDir, projectName)
 	}
-	that.check()
+	that.Save()
 }
 
 func (that *Config) getName(dUrl string) string {
