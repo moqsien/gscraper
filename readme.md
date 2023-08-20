@@ -10,6 +10,7 @@ gscraper 是用来自动在github下载[gvc](https://github.com/moqsien/gvc)所�
 
 - [protobuf](https://github.com/protocolbuffers/protobuf)
 - [vlang](https://github.com/vlang/v)
+- [v-analyzer](https://github.com/v-analyzer/v-analyzer)
 - [typst](https://github.com/typst/typst)
 - [neovim](https://github.com/neovim/neovim)
 - [vcpkg](https://github.com/microsoft/vcpkg)
