@@ -178,6 +178,15 @@ func (that *Downloader) Start(filenames ...string) {
 			that.download(filename, dUrl)
 		}
 	}
+	for _, filename := range filenames {
+		if dUrl, ok := that.conf.UrlList[filename]; ok && strings.Contains(dUrl, "gvc_") {
+			if tag := that.getLatestTag(dUrl); tag != "" {
+				that.info.GVCLatestVersion = tag
+				that.info.Store()
+			}
+			break
+		}
+	}
 	if err := os.RemoveAll(that.getTempDir()); err == nil {
 		that.gitPush()
 	}

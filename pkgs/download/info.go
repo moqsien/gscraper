@@ -21,10 +21,11 @@ type ItemInfo struct {
 }
 
 type Info struct {
-	InfoList map[string]*ItemInfo `json,koanf:"info_list"`
-	koanfer  *koanfer.JsonKoanfer
-	conf     *conf.Config
-	path     string
+	InfoList         map[string]*ItemInfo `json,koanf:"info_list"`
+	GVCLatestVersion string               `json,koanf:"gvc_latest_version"`
+	koanfer          *koanfer.JsonKoanfer
+	conf             *conf.Config
+	path             string
 }
 
 func NewInfo(cnf *conf.Config) *Info {
