@@ -19,6 +19,7 @@ gscraper 是用来自动在github下载[gvc](https://github.com/moqsien/gvc)所�
 - [pyenv-win](https://github.com/pyenv-win/pyenv-win)
 - [sing-box-rules](https://github.com/lyc8503/sing-box-rules)
 - [v2ray-rules-dat](https://github.com/Loyalsoldier/v2ray-rules-dat)
+- [gvc](https://github.com/moqsien/gvc)
 
 ## gscraper 命令
 
