@@ -1,7 +1,9 @@
 package main
 
 import (
+	"fmt"
 	"os"
+	"sync"
 
 	utils "github.com/moqsien/goutils/pkgs/gutils"
 	"github.com/moqsien/gscraper/pkgs/conf"
@@ -101,6 +103,22 @@ func init() {
 
 func main() {
 	sig := &utils.CtrlCSignal{}
+	w := &sync.WaitGroup{}
+	sig.RegisterSweeper(func() error {
+		w.Add(1)
+		d := download.NewDownloader()
+		download.GLOBAL_TO_EXIST = true
+		_, ok := <-download.WaitToSweepSig
+		if !ok {
+			fmt.Println("remove temporary files...")
+			d.RemoveTempDir()
+			fmt.Println("push downloaded file to remote repository...")
+			d.GitPush()
+		}
+		w.Done()
+		return nil
+	})
 	sig.ListenSignal()
 	app.Run()
+	w.Wait()
 }

@@ -3,7 +3,6 @@ package download
 import (
 	"fmt"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"runtime"
 	"strings"
@@ -16,6 +15,9 @@ import (
 	"github.com/moqsien/gscraper/pkgs/conf"
 )
 
+var GLOBAL_TO_EXIST bool
+var WaitToSweepSig = make(chan struct{})
+
 func IsFileCompressebBySuffix(filename string) bool {
 	suffixes := []string{
 		".tar", ".gz", ".zip", ".xz", ".7z", ".rar",
@@ -26,6 +28,15 @@ func IsFileCompressebBySuffix(filename string) bool {
 		}
 	}
 	return false
+}
+
+func GetGVCLocalProjectPath() string {
+	home, _ := os.UserHomeDir()
+	gvcDir := filepath.Join(home, "data", "projects", "go", "src", "gvc")
+	if ok, _ := utils.PathIsExist(gvcDir); ok {
+		return gvcDir
+	}
+	return ""
 }
 
 type Downloader struct {
@@ -49,6 +60,10 @@ func (that *Downloader) getTempDir() string {
 		os.MkdirAll(tempDir, 0777)
 	}
 	return tempDir
+}
+
+func (that *Downloader) RemoveTempDir() error {
+	return os.RemoveAll(that.getTempDir())
 }
 
 func (that *Downloader) getTempFilePath(filename string) (fPaht string) {
@@ -99,7 +114,7 @@ func (that *Downloader) download(fileName, dUrl string) {
 	that.fetcher.Url = that.conf.GithubSpeedupUrl + _url
 	tui.PrintInfo("[>>>] ", that.fetcher.Url)
 
-	that.fetcher.SetThreadNum(4)
+	that.fetcher.SetThreadNum(2)
 
 	tarfile := that.getTempFilePath(fileName)
 
@@ -130,40 +145,42 @@ func (that *Downloader) download(fileName, dUrl string) {
 	}
 }
 
-func (that *Downloader) gitPush() {
+func (that *Downloader) copyGVCFromLocal(fileName string) {
+	srcFile := filepath.Join(GetGVCLocalProjectPath(), "build", fileName)
+	tui.PrintInfo(fmt.Sprintf("copying: %s", srcFile))
+	if sumChanged := that.info.CheckSum(fileName, srcFile); sumChanged {
+		if _, err := utils.CopyFile(srcFile, filepath.Join(that.conf.GvcResourceDir, fileName)); err == nil {
+			that.info.Store()
+		} else {
+			that.info.Load()
+		}
+	}
+}
+
+func (that *Downloader) GetGitCmd() string {
 	cmdName := "git"
 	if runtime.GOOS == "windows" {
 		cmdName = "git.exe"
 	}
-	cmd := exec.Command(cmdName, "add", ".")
-	cmd.Dir = that.conf.GvcResourceDir
-	cmd.Stdin = os.Stdin
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	cmd.Env = os.Environ()
-	if err := cmd.Run(); err != nil {
+	return cmdName
+}
+
+func (that *Downloader) GitPush() {
+	cmdName := that.GetGitCmd()
+	_, err := utils.ExecuteSysCommand(false, that.conf.GvcResourceDir, cmdName, "add", ".")
+	if err != nil {
 		tui.PrintError(err)
 		os.Exit(1)
 	}
 
-	cmd = exec.Command(cmdName, "commit", "-m", `update`)
-	cmd.Dir = that.conf.GvcResourceDir
-	cmd.Stdin = os.Stdin
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	cmd.Env = os.Environ()
-	if err := cmd.Run(); err != nil {
+	_, err = utils.ExecuteSysCommand(false, that.conf.GvcResourceDir, cmdName, "commit", "-m", `update`)
+	if err != nil {
 		tui.PrintError(err)
 		os.Exit(1)
 	}
 
-	cmd = exec.Command(cmdName, "push")
-	cmd.Dir = that.conf.GvcResourceDir
-	cmd.Stdin = os.Stdin
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	cmd.Env = os.Environ()
-	if err := cmd.Run(); err != nil {
+	_, err = utils.ExecuteSysCommand(false, that.conf.GvcResourceDir, cmdName, "push")
+	if err != nil {
 		tui.PrintError(err)
 		os.Exit(1)
 	}
@@ -173,21 +190,41 @@ func (that *Downloader) Start(filenames ...string) {
 	if len(filenames) == 0 {
 		filenames = that.conf.UrlOrder
 	}
+
+	doExists, _ := utils.PathIsExist(GetGVCLocalProjectPath())
 	for _, filename := range filenames {
-		if dUrl, ok := that.conf.UrlList[filename]; ok {
+		if GLOBAL_TO_EXIST {
+			close(WaitToSweepSig)
+			return
+		}
+		if dUrl, ok := that.conf.UrlList[filename]; ok && !strings.Contains(dUrl, "gvc_") {
+			that.download(filename, dUrl)
+		} else if strings.Contains(dUrl, "gvc_") && doExists {
+			that.copyGVCFromLocal(filename)
+		} else if strings.Contains(dUrl, "gvc_") && !doExists {
 			that.download(filename, dUrl)
 		}
 	}
-	for _, filename := range filenames {
-		if dUrl, ok := that.conf.UrlList[filename]; ok && strings.Contains(dUrl, "gvc_") {
-			if tag := that.getLatestTag(dUrl); tag != "" {
-				that.info.GVCLatestVersion = tag
-				that.info.Store()
+	if !doExists {
+		for _, filename := range filenames {
+			if GLOBAL_TO_EXIST {
+				close(WaitToSweepSig)
+				return
 			}
-			break
+			if dUrl, ok := that.conf.UrlList[filename]; ok && strings.Contains(dUrl, "gvc_") {
+				if tag := that.getLatestTag(dUrl); tag != "" {
+					that.info.GVCLatestVersion = tag
+					that.info.Store()
+				}
+				break
+			}
 		}
+	} else {
+		output, _ := utils.ExecuteSysCommand(true, GetGVCLocalProjectPath(), that.GetGitCmd(), "describe", "--abbrev=0", "--tags")
+		that.info.GVCLatestVersion = strings.TrimRight(output.String(), "\n")
 	}
+
 	if err := os.RemoveAll(that.getTempDir()); err == nil {
-		that.gitPush()
+		that.GitPush()
 	}
 }
