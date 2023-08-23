@@ -65,6 +65,7 @@ func (that *Config) SetDefault() {
 	that.GithubSpeedupUrl = "https://ghproxy.com/"
 	that.GvcResourceProject = "git@gitlab.com:moqsien/gvc_resources.git"
 	that.UrlList = map[string]string{
+		"gsudo_portable.zip":              "https://github.com/gerardog/gsudo/releases//latest/download/gsudo.portable.zip",
 		"gvc_darwin-amd64.zip":            "https://github.com/moqsien/gvc/releases/latest/download/gvc_darwin-amd64.zip",
 		"gvc_darwin-arm64.zip":            "https://github.com/moqsien/gvc/releases/latest/download/gvc_darwin-arm64.zip",
 		"gvc_linux-amd64.zip":             "https://github.com/moqsien/gvc/releases/latest/download/gvc_linux-amd64.zip",
@@ -100,6 +101,7 @@ func (that *Config) SetDefault() {
 		"pyenv_win.zip":                   "https://github.com/pyenv-win/pyenv-win/archive/refs/heads/master.zip",
 	}
 	that.UrlOrder = []string{
+		"gsudo_portable.zip",
 		"gvc_darwin-amd64.zip",
 		"gvc_darwin-arm64.zip",
 		"gvc_linux-amd64.zip",
