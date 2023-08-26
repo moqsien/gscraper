@@ -21,12 +21,16 @@ var (
 )
 
 type Config struct {
-	GithubSpeedupUrl   string            `json,koanf:"github_speedup_url"`
-	GvcResourceDir     string            `json,koanf:"gvc_resource_dir"`
-	GvcResourceProject string            `json,koanf:"gvc_resource_project"`
-	UrlList            map[string]string `json,koanf:"url_list"`
-	UrlOrder           []string          `json,koanf:"url_order"`
-	koanfer            *koanfer.JsonKoanfer
+	GithubSpeedupUrl    string            `json,koanf:"github_speedup_url"`
+	GvcResourceDir      string            `json,koanf:"gvc_resource_dir"`
+	GvcResourceProject  string            `json,koanf:"gvc_resource_project"`
+	UrlList             map[string]string `json,koanf:"url_list"`
+	UrlOrder            []string          `json,koanf:"url_order"`
+	GithubVPNSubscriber []string          `json,koanf:"github_vpn_subscriber"`
+	LocalProxy          string            `json,koanf:"local_proxy"`
+	NeoboxKey           string            `json,koanf:"neobox_key"`
+	NeoboxResultFile    string            `json,koanf:"neobox_result_file"`
+	koanfer             *koanfer.JsonKoanfer
 }
 
 func NewConfig() *Config {
@@ -38,6 +42,10 @@ func NewConfig() *Config {
 	cfg.initiate()
 	cfg.check()
 	return cfg
+}
+
+func (that *Config) Save() {
+	that.koanfer.Save(that)
 }
 
 func (that *Config) check() {
@@ -136,6 +144,30 @@ func (that *Config) SetDefault() {
 		"pyenv_unix.zip",
 		"pyenv_win.zip",
 	}
+	that.NeoboxResultFile = "conf.txt"
+	that.GithubVPNSubscriber = []string{
+		"https://raw.githubusercontent.com/peasoft/NoMoreWalls/master/list.txt",
+		"https://raw.githubusercontent.com/ZywChannel/free/main/sub",
+		"https://raw.githubusercontent.com/ermaozi01/free_clash_vpn/main/subscribe/v2ray.txt",
+		"https://raw.githubusercontent.com/Pawdroid/Free-servers/main/sub",
+		"https://raw.githubusercontent.com/freefq/free/master/v2",
+		"https://raw.githubusercontent.com/mfuu/v2ray/master/v2ray",
+		"https://raw.githubusercontent.com/ssrsub/ssr/master/ss-sub",
+		"https://raw.githubusercontent.com/ssrsub/ssr/master/V2Ray",
+		"https://raw.githubusercontent.com/ermaozi/get_subscribe/main/subscribe/v2ray.txt",
+		"https://raw.githubusercontent.com/tbbatbb/Proxy/master/dist/v2ray.config.txt",
+		"https://raw.githubusercontent.com/vveg26/get_proxy/main/dist/v2ray.config.txt",
+		"https://raw.githubusercontent.com/baip01/yhkj/main/v2ray",
+		"https://raw.githubusercontent.com/aiboboxx/v2rayfree/main/v2",
+		"https://raw.githubusercontent.com/iosoledad/soledadys/main/Azure.Aws.vmess/Azure.Aws.QuantumultX/Azure.txt",
+		"https://raw.githubusercontent.com/ts-sf/fly/main/v2",
+		"https://raw.githubusercontent.com/free18/v2ray/main/v2ray.txt",
+		"https://raw.githubusercontent.com/Leon406/SubCrawler/main/sub/share/vless",
+		"https://raw.githubusercontent.com/Leon406/SubCrawler/main/sub/share/ss",
+		"https://raw.githubusercontent.com/Leon406/SubCrawler/main/sub/share/ssr",
+		"https://raw.githubusercontent.com/Leon406/SubCrawler/main/sub/share/all3",
+		"https://raw.githubusercontent.com/Leon406/SubCrawler/main/sub/share/v2",
+	}
 	that.Save()
 	that.ReadGvcResourceDir()
 }
@@ -223,6 +255,44 @@ func (that *Config) Show() {
 	tui.Cyan(strings.Join(append([]string{"[Files to download]:"}, that.UrlOrder...), "  "))
 }
 
-func (that *Config) Save() {
-	that.koanfer.Save(that)
+func (that *Config) AddGithubVpnSubscriber(sUrl string) {
+	flag := false
+	for _, v := range that.GithubVPNSubscriber {
+		if v == sUrl {
+			flag = true
+			break
+		}
+	}
+	if !flag && utils.VerifyUrls(sUrl) {
+		that.GithubVPNSubscriber = append(that.GithubVPNSubscriber, sUrl)
+		that.Save()
+	}
+}
+
+func (that *Config) RemoveGithubVPNSubscriber(index int) {
+	if index < 0 || index >= len(that.GithubVPNSubscriber) {
+		return
+	}
+	if index == len(that.GithubVPNSubscriber)-1 {
+		that.GithubVPNSubscriber = that.GithubVPNSubscriber[:index]
+	} else {
+		that.GithubVPNSubscriber = append(that.GithubVPNSubscriber[:index], that.GithubVPNSubscriber[index+1:]...)
+	}
+	that.Save()
+}
+
+func (that *Config) ShowGithubVPNSubscriber() {
+	for idx, sUrl := range that.GithubVPNSubscriber {
+		fmt.Printf("%v. %s", idx, sUrl)
+	}
+}
+
+func (that *Config) SetLocalProxy(pxy string) {
+	that.LocalProxy = pxy
+	that.Save()
+}
+
+func (that *Config) ResetNeoboxKey() {
+	that.NeoboxKey = utils.RandomString(16)
+	that.Save()
 }
