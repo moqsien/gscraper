@@ -3,11 +3,13 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"strconv"
 	"sync"
 
 	utils "github.com/moqsien/goutils/pkgs/gutils"
 	"github.com/moqsien/gscraper/pkgs/conf"
 	"github.com/moqsien/gscraper/pkgs/download"
+	"github.com/moqsien/gscraper/pkgs/sites"
 	cli "github.com/urfave/cli/v2"
 )
 
@@ -99,6 +101,102 @@ func init() {
 			return nil
 		},
 	})
+
+	vpnCli := &cli.Command{
+		Name:        "vpn",
+		Aliases:     []string{"v"},
+		Usage:       "free vpn related.",
+		Subcommands: []*cli.Command{},
+	}
+
+	vshow := &cli.Command{
+		Name:    "show",
+		Usage:   "Show subscribers from github.",
+		Aliases: []string{"sh", "s"},
+		Action: func(ctx *cli.Context) error {
+			cnf := conf.NewConfig()
+			cnf.ShowGithubVPNSubscriber()
+			return nil
+		},
+	}
+	vpnCli.Subcommands = append(vpnCli.Subcommands, vshow)
+
+	vadd := &cli.Command{
+		Name:    "add",
+		Usage:   "Add subscribers from github.",
+		Aliases: []string{"ad", "a"},
+		Action: func(ctx *cli.Context) error {
+			cnf := conf.NewConfig()
+			sUrl := ctx.Args().First()
+			cnf.AddGithubVpnSubscriber(sUrl)
+			return nil
+		},
+	}
+	vpnCli.Subcommands = append(vpnCli.Subcommands, vadd)
+
+	vrm := &cli.Command{
+		Name:    "remove",
+		Usage:   "Remove subscribers from github.",
+		Aliases: []string{"rm", "r"},
+		Action: func(ctx *cli.Context) error {
+			cnf := conf.NewConfig()
+			if idx, err := strconv.Atoi(ctx.Args().First()); err == nil {
+				cnf.RemoveGithubVPNSubscriber(idx)
+			}
+			return nil
+		},
+	}
+	vpnCli.Subcommands = append(vpnCli.Subcommands, vrm)
+
+	vproxy := &cli.Command{
+		Name:    "proxy",
+		Usage:   "Set local proxy for gscraper.",
+		Aliases: []string{"pxy", "p"},
+		Action: func(ctx *cli.Context) error {
+			cnf := conf.NewConfig()
+			pxy := ctx.Args().First()
+			cnf.SetLocalProxy(pxy)
+			return nil
+		},
+	}
+	vpnCli.Subcommands = append(vpnCli.Subcommands, vproxy)
+
+	vnKey := &cli.Command{
+		Name:    "neobox-key",
+		Usage:   "Reset neobox-key for gscraper.",
+		Aliases: []string{"nk", "key"},
+		Action: func(ctx *cli.Context) error {
+			cnf := conf.NewConfig()
+			cnf.ResetNeoboxKey()
+			return nil
+		},
+	}
+	vpnCli.Subcommands = append(vpnCli.Subcommands, vnKey)
+
+	vrun := &cli.Command{
+		Name:    "get-free-vpn",
+		Usage:   "Get free vpns.",
+		Aliases: []string{"gfv", "free"},
+		Action: func(ctx *cli.Context) error {
+			s := sites.NewSites()
+			s.Run()
+			return nil
+		},
+	}
+	vpnCli.Subcommands = append(vpnCli.Subcommands, vrun)
+
+	vshownk := &cli.Command{
+		Name:    "show-key",
+		Usage:   "Show neobox-key.",
+		Aliases: []string{"sk", "skey"},
+		Action: func(ctx *cli.Context) error {
+			cnf := conf.NewConfig()
+			cnf.ShowNeoboxKey()
+			return nil
+		},
+	}
+	vpnCli.Subcommands = append(vpnCli.Subcommands, vshownk)
+	app.Add(vpnCli)
 }
 
 func StartApp() {

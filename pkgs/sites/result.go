@@ -8,3 +8,7 @@ type Result struct {
 	Trojan       []string `json:"trojan"`
 	UpdateAt     string   `json:"update_time"`
 }
+
+var (
+	VPN_MAP = map[string]struct{}{}
+)

@@ -159,7 +159,6 @@ func (that *Config) SetDefault() {
 		"https://raw.githubusercontent.com/vveg26/get_proxy/main/dist/v2ray.config.txt",
 		"https://raw.githubusercontent.com/baip01/yhkj/main/v2ray",
 		"https://raw.githubusercontent.com/aiboboxx/v2rayfree/main/v2",
-		"https://raw.githubusercontent.com/iosoledad/soledadys/main/Azure.Aws.vmess/Azure.Aws.QuantumultX/Azure.txt",
 		"https://raw.githubusercontent.com/ts-sf/fly/main/v2",
 		"https://raw.githubusercontent.com/free18/v2ray/main/v2ray.txt",
 		"https://raw.githubusercontent.com/Leon406/SubCrawler/main/sub/share/vless",
@@ -167,6 +166,18 @@ func (that *Config) SetDefault() {
 		"https://raw.githubusercontent.com/Leon406/SubCrawler/main/sub/share/ssr",
 		"https://raw.githubusercontent.com/Leon406/SubCrawler/main/sub/share/all3",
 		"https://raw.githubusercontent.com/Leon406/SubCrawler/main/sub/share/v2",
+		"https://sub.sharecentre.online/sub",
+		"https://getafreenode.com/subscribe/?uuid=D213ED80-199B-4A01-9D62-BBCBA9C16226",
+		"https://wanshanziwo.eu.org/vmess/sub?c=US",
+		"https://wanshanziwo.eu.org/ssr/sub",
+		"https://wanshanziwo.eu.org/sip002/sub",
+		"https://wanshanziwo.eu.org/trojan/sub",
+		"https://api.subcloud.xyz/sub?target=v2ray&url=https%3A%2F%2Fcdn.jsdelivr.net%2Fgh%2Fzyzmzyz%2Ffree-nodes%40master%2FClash.yml&insert=false",
+		"https://api.subcloud.xyz/sub?target=v2ray&url=https%3A%2F%2Fcdn.statically.io%2Fgh%2Fopenrunner%2Fclash-freenode%2Fmain%2Fclash.yaml&insert=false",
+		"https://clashnode.com/wp-content/uploads/{year}/{month}/{year}{month}{day}.txt",
+		"https://nodefree.org/dy/{year}/{month}/{year}{month}{day}.txt",
+		"https://hiclash.com/wp-content/uploads/{year}/{month}/{year}{month}{day}.txt",
+		"https://wefound.cc/freenode/{year}/{month}/{year}{month}{day}.txt",
 	}
 	that.Save()
 	that.ReadGvcResourceDir()
@@ -283,7 +294,7 @@ func (that *Config) RemoveGithubVPNSubscriber(index int) {
 
 func (that *Config) ShowGithubVPNSubscriber() {
 	for idx, sUrl := range that.GithubVPNSubscriber {
-		fmt.Printf("%v. %s", idx, sUrl)
+		fmt.Printf("%v. %s\n", idx, sUrl)
 	}
 }
 
@@ -295,4 +306,8 @@ func (that *Config) SetLocalProxy(pxy string) {
 func (that *Config) ResetNeoboxKey() {
 	that.NeoboxKey = utils.RandomString(16)
 	that.Save()
+}
+
+func (that *Config) ShowNeoboxKey() {
+	tui.PrintInfo(fmt.Sprintf("neobox-key: %s\n", that.NeoboxKey))
 }

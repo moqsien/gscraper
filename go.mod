@@ -4,7 +4,7 @@ go 1.20
 
 require (
 	github.com/mholt/archiver/v3 v3.5.1
-	github.com/moqsien/goutils v0.2.8
+	github.com/moqsien/goutils v0.3.0
 	github.com/urfave/cli/v2 v2.25.7
 )
 
