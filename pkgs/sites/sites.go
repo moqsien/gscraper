@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 	"runtime"
 	"strings"
+	"time"
 
 	"github.com/moqsien/goutils/pkgs/crypt"
 	tui "github.com/moqsien/goutils/pkgs/gtui"
@@ -77,6 +78,7 @@ func (that *Sites) Save() {
 		len(that.VPNList.ShadowSocks),
 		len(that.VPNList.ShadowSocksR),
 		len(that.VPNList.Trojan)))
+	that.VPNList.UpdateAt = time.Now().Format("2006-01-02 15:04:05")
 	that.koanfer.Save(that.VPNList)
 	that.setGitIgnore()
 }
