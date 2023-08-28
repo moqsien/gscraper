@@ -73,6 +73,7 @@ func (that *VPNFromGithub) Parse(content []byte) {
 	for _, v := range vList {
 		v = strings.TrimSpace(v)
 		v = strings.TrimRight(v, "\r")
+		v = ParseRawUri(v)
 		if strings.HasPrefix(v, "vmess://") {
 			_, ok := VPN_MAP[v]
 			if !ok {
