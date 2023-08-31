@@ -76,36 +76,42 @@ func (that *VPNFromGithub) Parse(content []byte) {
 		v = ParseRawUri(v)
 		if strings.HasPrefix(v, "vmess://") {
 			_, ok := VPN_MAP[v]
-			if !ok {
-				that.VPNList.Vmess = append(that.VPNList.Vmess, v)
+			if s := that.wrapItem(v); !ok && s != "" {
+				that.VPNList.Vmess = append(that.VPNList.Vmess, s)
 				VPN_MAP[v] = struct{}{}
 			}
 		} else if strings.HasPrefix(v, "vless://") {
 			_, ok := VPN_MAP[v]
-			if !ok {
-				that.VPNList.Vless = append(that.VPNList.Vless, v)
+			if s := that.wrapItem(v); !ok && s != "" {
+				that.VPNList.Vless = append(that.VPNList.Vless, s)
 				VPN_MAP[v] = struct{}{}
 			}
 		} else if strings.HasPrefix(v, "ss://") {
 			_, ok := VPN_MAP[v]
-			if !ok {
-				that.VPNList.ShadowSocks = append(that.VPNList.ShadowSocks, v)
+			if s := that.wrapItem(v); !ok && s != "" {
+				that.VPNList.ShadowSocks = append(that.VPNList.ShadowSocks, s)
 				VPN_MAP[v] = struct{}{}
 			}
 		} else if strings.HasPrefix(v, "ssr://") {
 			_, ok := VPN_MAP[v]
-			if !ok {
-				that.VPNList.ShadowSocksR = append(that.VPNList.ShadowSocksR, v)
+			if s := that.wrapItem(v); !ok && s != "" {
+				that.VPNList.ShadowSocksR = append(that.VPNList.ShadowSocksR, s)
 				VPN_MAP[v] = struct{}{}
 			}
 		} else if strings.HasPrefix(v, "trojan://") {
 			_, ok := VPN_MAP[v]
-			if !ok {
-				that.VPNList.Trojan = append(that.VPNList.Trojan, v)
+			if s := that.wrapItem(v); !ok && s != "" {
+				that.VPNList.Trojan = append(that.VPNList.Trojan, s)
 				VPN_MAP[v] = struct{}{}
 			}
+
 		}
 	}
+}
+
+func (that *VPNFromGithub) wrapItem(rawUri string) string {
+	item := NewItem(rawUri)
+	return item.String()
 }
 
 func (that *VPNFromGithub) getUrl(sUrl string) (pUrl string) {
