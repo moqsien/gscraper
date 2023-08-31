@@ -39,18 +39,30 @@ func (that *Item) String() string {
 	if scheme == parser.SchemeSSR {
 		that.OutboundType = string(outbound.SingBox)
 		ob := outbound.GetOutbound(outbound.SingBox, that.RawUri)
+		if ob == nil {
+			return ""
+		}
+		ob.Parse(that.RawUri)
 		that.OutboundType = ob.GetOutboundStr()
 		that.Address = ob.Addr()
 		that.Port = ob.Port()
 	} else if scheme == parser.SchemeSS && strings.Contains(that.RawUri, "plugin=") {
 		that.OutboundType = string(outbound.SingBox)
 		ob := outbound.GetOutbound(outbound.SingBox, that.RawUri)
+		if ob == nil {
+			return ""
+		}
+		ob.Parse(that.RawUri)
 		that.OutboundType = ob.GetOutboundStr()
 		that.Address = ob.Addr()
 		that.Port = ob.Port()
 	} else {
 		that.OutboundType = string(outbound.XrayCore)
 		ob := outbound.GetOutbound(outbound.XrayCore, that.RawUri)
+		if ob == nil {
+			return ""
+		}
+		ob.Parse(that.RawUri)
 		that.OutboundType = ob.GetOutboundStr()
 		that.Address = ob.Addr()
 		that.Port = ob.Port()
