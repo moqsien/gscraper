@@ -30,6 +30,7 @@ var (
 type Item struct {
 	Address      string `json:"address"`
 	Port         int    `json:"port"`
+	RTT          int    `json:"rtt"`
 	RawUri       string `json:"raw_uri"`
 	Outbound     string `json:"outbound"`
 	OutboundType string `json:"outbound_type"`
