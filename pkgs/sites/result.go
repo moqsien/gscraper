@@ -16,6 +16,11 @@ type Result struct {
 	ShadowSocksR []string `json:"shadowsocksR"`
 	Trojan       []string `json:"trojan"`
 	UpdateAt     string   `json:"update_time"`
+	VmessTotal   int      `json:"vmess_total"`
+	VlessTotal   int      `json:"vless_total"`
+	TrojanTotal  int      `json:"trojan_total"`
+	SSTotal      int      `json:"ss_total"`
+	SSRTotal     int      `json:"ssr_total"`
 }
 
 var (

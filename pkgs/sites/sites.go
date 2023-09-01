@@ -78,7 +78,14 @@ func (that *Sites) Save() {
 		len(that.VPNList.ShadowSocks),
 		len(that.VPNList.ShadowSocksR),
 		len(that.VPNList.Trojan)))
+
 	that.VPNList.UpdateAt = time.Now().Format("2006-01-02 15:04:05")
+	that.VPNList.VmessTotal = len(that.VPNList.Vmess)
+	that.VPNList.VlessTotal = len(that.VPNList.Vless)
+	that.VPNList.SSTotal = len(that.VPNList.ShadowSocks)
+	that.VPNList.SSRTotal = len(that.VPNList.ShadowSocksR)
+	that.VPNList.TrojanTotal = len(that.VPNList.Trojan)
+
 	that.koanfer.Save(that.VPNList)
 	that.setGitIgnore()
 }
