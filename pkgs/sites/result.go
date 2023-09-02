@@ -49,7 +49,7 @@ func (that *Item) String() string {
 			return ""
 		}
 		ob.Parse(that.RawUri)
-		that.OutboundType = ob.GetOutboundStr()
+		that.Outbound = ob.GetOutboundStr()
 		that.Address = ob.Addr()
 		that.Port = ob.Port()
 	} else if scheme == parser.SchemeSS && strings.Contains(that.RawUri, "plugin=") {
@@ -59,7 +59,7 @@ func (that *Item) String() string {
 			return ""
 		}
 		ob.Parse(that.RawUri)
-		that.OutboundType = ob.GetOutboundStr()
+		that.Outbound = ob.GetOutboundStr()
 		that.Address = ob.Addr()
 		that.Port = ob.Port()
 	} else {
@@ -69,7 +69,7 @@ func (that *Item) String() string {
 			return ""
 		}
 		ob.Parse(that.RawUri)
-		that.OutboundType = ob.GetOutboundStr()
+		that.Outbound = ob.GetOutboundStr()
 		that.Address = ob.Addr()
 		that.Port = ob.Port()
 	}
