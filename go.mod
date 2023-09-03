@@ -5,7 +5,7 @@ go 1.20
 require (
 	github.com/mholt/archiver/v3 v3.5.1
 	github.com/moqsien/goutils v0.3.1
-	github.com/moqsien/vpnparser v0.0.2
+	github.com/moqsien/vpnparser v0.0.3
 	github.com/urfave/cli/v2 v2.25.7
 )
 
