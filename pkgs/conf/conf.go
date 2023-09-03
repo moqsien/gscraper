@@ -109,7 +109,6 @@ func (that *Config) SetDefault() {
 		"pyenv_win.zip":                   "https://github.com/pyenv-win/pyenv-win/archive/refs/heads/master.zip",
 	}
 	that.UrlOrder = []string{
-		"gsudo_portable.zip",
 		"gvc_darwin-amd64.zip",
 		"gvc_darwin-arm64.zip",
 		"gvc_linux-amd64.zip",
@@ -120,6 +119,7 @@ func (that *Config) SetDefault() {
 		"geosite.db",
 		"geoip.dat",
 		"geosite.dat",
+		"gsudo_portable.zip",
 		"protoc_win64.zip",
 		"protoc_linux_x86_64.zip",
 		"protoc_linux_aarch_64.zip",
