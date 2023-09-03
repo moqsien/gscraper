@@ -329,6 +329,8 @@ github.com/moqsien/vpnparser v0.0.0-20230831133945-64bf26568d51 h1:wQ0usG1Dryini
 github.com/moqsien/vpnparser v0.0.0-20230831133945-64bf26568d51/go.mod h1:VlPKqnK63T+pZwZBXRjFhE6L79QOC7Iy8sZAHgN9ZK8=
 github.com/moqsien/vpnparser v0.0.1 h1:tnmQ+8a6cc7g3wdVexr0w/L6vAWRHmOb7hY/edRucoc=
 github.com/moqsien/vpnparser v0.0.1/go.mod h1:VlPKqnK63T+pZwZBXRjFhE6L79QOC7Iy8sZAHgN9ZK8=
+github.com/moqsien/vpnparser v0.0.2 h1:84CH/YgoVNhlXAoi3Xjk9lFGAa3vHJJOP65WICfHHgI=
+github.com/moqsien/vpnparser v0.0.2/go.mod h1:VlPKqnK63T+pZwZBXRjFhE6L79QOC7Iy8sZAHgN9ZK8=
 github.com/moqsien/xtractr v0.0.1 h1:LT7R2pDAA9ttuMXtvSq5L2/Ufb9K9UsARNJe69qek7s=
 github.com/moqsien/xtractr v0.0.1/go.mod h1:f6rBBcTp0h9E1C7uB9A/SVr6jtF635H4/bpDDZhHijo=
 github.com/mwitkow/go-conntrack v0.0.0-20161129095857-cc309e4a2223/go.mod h1:qRWi+5nqEBWmkhHvq77mSJWrCKwh8bxhgT7d/eI7P4U=

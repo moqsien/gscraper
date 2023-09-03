@@ -10,6 +10,7 @@ import (
 	"github.com/moqsien/goutils/pkgs/crypt"
 	tui "github.com/moqsien/goutils/pkgs/gtui"
 	"github.com/moqsien/gscraper/pkgs/conf"
+	"github.com/moqsien/vpnparser/pkgs/outbound"
 )
 
 type VPNFromGithub struct {
@@ -110,7 +111,7 @@ func (that *VPNFromGithub) Parse(content []byte) {
 }
 
 func (that *VPNFromGithub) wrapItem(rawUri string) string {
-	item := NewItem(rawUri)
+	item := outbound.NewItem(rawUri)
 	return item.String()
 }
 
