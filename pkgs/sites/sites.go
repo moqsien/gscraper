@@ -14,6 +14,7 @@ import (
 	utils "github.com/moqsien/goutils/pkgs/gutils"
 	"github.com/moqsien/goutils/pkgs/koanfer"
 	"github.com/moqsien/gscraper/pkgs/conf"
+	"github.com/moqsien/vpnparser/pkgs/outbound"
 )
 
 const (
@@ -28,21 +29,15 @@ type IVpnSite interface {
 type Sites struct {
 	conf     *conf.Config
 	siteList []IVpnSite
-	VPNList  *Result `json:"vpn_list"`
+	VPNList  *outbound.Result `json:"vpn_list"`
 	koanfer  *koanfer.JsonKoanfer
 	path     string
 }
 
 func NewSites() (s *Sites) {
 	s = &Sites{
-		conf: conf.NewConfig(),
-		VPNList: &Result{
-			Vmess:        []string{},
-			Vless:        []string{},
-			ShadowSocks:  []string{},
-			ShadowSocksR: []string{},
-			Trojan:       []string{},
-		},
+		conf:     conf.NewConfig(),
+		VPNList:  outbound.NewResult(),
 		siteList: []IVpnSite{},
 	}
 	s.RegisterSite(NewVPNFromGithub(s.conf, s.VPNList))

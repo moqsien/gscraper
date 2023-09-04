@@ -13,12 +13,16 @@ import (
 	"github.com/moqsien/vpnparser/pkgs/outbound"
 )
 
+var (
+	VPN_MAP = map[string]struct{}{}
+)
+
 type VPNFromGithub struct {
 	Conf    *conf.Config
-	VPNList *Result `json:"vpn_list"`
+	VPNList *outbound.Result `json:"vpn_list"`
 }
 
-func NewVPNFromGithub(cnf *conf.Config, vpnList *Result) (v *VPNFromGithub) {
+func NewVPNFromGithub(cnf *conf.Config, vpnList *outbound.Result) (v *VPNFromGithub) {
 	v = &VPNFromGithub{
 		Conf:    cnf,
 		VPNList: vpnList,
@@ -77,31 +81,31 @@ func (that *VPNFromGithub) Parse(content []byte) {
 		v = ParseRawUri(v)
 		if strings.HasPrefix(v, "vmess://") {
 			_, ok := VPN_MAP[v]
-			if s := that.wrapItem(v); !ok && s != "" {
+			if s := that.wrapItem(v); !ok && s != nil {
 				that.VPNList.Vmess = append(that.VPNList.Vmess, s)
 				VPN_MAP[v] = struct{}{}
 			}
 		} else if strings.HasPrefix(v, "vless://") {
 			_, ok := VPN_MAP[v]
-			if s := that.wrapItem(v); !ok && s != "" {
+			if s := that.wrapItem(v); !ok && s != nil {
 				that.VPNList.Vless = append(that.VPNList.Vless, s)
 				VPN_MAP[v] = struct{}{}
 			}
 		} else if strings.HasPrefix(v, "ss://") {
 			_, ok := VPN_MAP[v]
-			if s := that.wrapItem(v); !ok && s != "" {
+			if s := that.wrapItem(v); !ok && s != nil {
 				that.VPNList.ShadowSocks = append(that.VPNList.ShadowSocks, s)
 				VPN_MAP[v] = struct{}{}
 			}
 		} else if strings.HasPrefix(v, "ssr://") {
 			_, ok := VPN_MAP[v]
-			if s := that.wrapItem(v); !ok && s != "" {
+			if s := that.wrapItem(v); !ok && s != nil {
 				that.VPNList.ShadowSocksR = append(that.VPNList.ShadowSocksR, s)
 				VPN_MAP[v] = struct{}{}
 			}
 		} else if strings.HasPrefix(v, "trojan://") {
 			_, ok := VPN_MAP[v]
-			if s := that.wrapItem(v); !ok && s != "" {
+			if s := that.wrapItem(v); !ok && s != nil {
 				that.VPNList.Trojan = append(that.VPNList.Trojan, s)
 				VPN_MAP[v] = struct{}{}
 			}
@@ -110,9 +114,10 @@ func (that *VPNFromGithub) Parse(content []byte) {
 	}
 }
 
-func (that *VPNFromGithub) wrapItem(rawUri string) string {
+func (that *VPNFromGithub) wrapItem(rawUri string) *outbound.ProxyItem {
 	item := outbound.NewItem(rawUri)
-	return item.String()
+	item.GetOutbound()
+	return item
 }
 
 func (that *VPNFromGithub) getUrl(sUrl string) (pUrl string) {
