@@ -65,5 +65,8 @@ func ParseRawUri(rawUri string) (result string) {
 		result, _ = url.QueryUnescape(result)
 	}
 	result = HandleQuery(result)
+	if strings.Contains(result, "127.0.0.1") || strings.Contains(result, "127.0.0.0") {
+		return ""
+	}
 	return
 }
