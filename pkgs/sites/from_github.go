@@ -116,6 +116,9 @@ func (that *VPNFromGithub) Parse(content []byte) {
 
 func (that *VPNFromGithub) wrapItem(rawUri string) *outbound.ProxyItem {
 	item := outbound.NewItem(rawUri)
+	if strings.HasPrefix(item.Address, "127.0.") {
+		return nil
+	}
 	item.GetOutbound()
 	return item
 }
