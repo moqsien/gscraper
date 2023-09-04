@@ -333,6 +333,8 @@ github.com/moqsien/goutils v0.3.1 h1:0oBQOGG/GhzJGopn/zbHi3ahaG3/NitKs9OuWJspdhs
 github.com/moqsien/goutils v0.3.1/go.mod h1:V9Yj1e5Qo292hqMyYVfX4/yTihpl6wFp7HhpPZMUvxg=
 github.com/moqsien/vpnparser v0.0.9 h1:X+00L8qLrk1JKP6lQ7poWL/tU7SDTKhVQcYnEWkbnbM=
 github.com/moqsien/vpnparser v0.0.9/go.mod h1:Dcy/NtnfOIqkwdPDvuiU1gqGIoUhIYFiZSeWttTVd4s=
+github.com/moqsien/vpnparser v0.1.0 h1:4fKBH5mm77h44uJ2+xZTgDWekQeAmXQp8KoUsNXQ8Mg=
+github.com/moqsien/vpnparser v0.1.0/go.mod h1:Dcy/NtnfOIqkwdPDvuiU1gqGIoUhIYFiZSeWttTVd4s=
 github.com/moqsien/xtractr v0.0.1 h1:LT7R2pDAA9ttuMXtvSq5L2/Ufb9K9UsARNJe69qek7s=
 github.com/moqsien/xtractr v0.0.1/go.mod h1:f6rBBcTp0h9E1C7uB9A/SVr6jtF635H4/bpDDZhHijo=
 github.com/mwitkow/go-conntrack v0.0.0-20161129095857-cc309e4a2223/go.mod h1:qRWi+5nqEBWmkhHvq77mSJWrCKwh8bxhgT7d/eI7P4U=
