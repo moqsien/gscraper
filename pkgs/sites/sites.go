@@ -12,7 +12,6 @@ import (
 	"github.com/moqsien/goutils/pkgs/crypt"
 	tui "github.com/moqsien/goutils/pkgs/gtui"
 	utils "github.com/moqsien/goutils/pkgs/gutils"
-	"github.com/moqsien/goutils/pkgs/koanfer"
 	"github.com/moqsien/gscraper/pkgs/conf"
 	"github.com/moqsien/vpnparser/pkgs/outbound"
 )
@@ -30,7 +29,6 @@ type Sites struct {
 	conf     *conf.Config
 	siteList []IVpnSite
 	VPNList  *outbound.Result `json:"vpn_list"`
-	koanfer  *koanfer.JsonKoanfer
 	path     string
 }
 
@@ -42,7 +40,6 @@ func NewSites() (s *Sites) {
 	}
 	s.RegisterSite(NewVPNFromGithub(s.conf, s.VPNList))
 	s.path = filepath.Join(s.conf.GvcResourceDir, JSON_FILE_NAME)
-	s.koanfer, _ = koanfer.NewKoanfer(s.path)
 	return
 }
 
@@ -81,7 +78,7 @@ func (that *Sites) Save() {
 	that.VPNList.SSRTotal = len(that.VPNList.ShadowSocksR)
 	that.VPNList.TrojanTotal = len(that.VPNList.Trojan)
 
-	that.koanfer.Save(that.VPNList)
+	that.VPNList.Save(that.path)
 	that.setGitIgnore()
 }
 
