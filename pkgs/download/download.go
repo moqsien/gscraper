@@ -2,6 +2,7 @@ package download
 
 import (
 	"fmt"
+	"io"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -150,10 +151,19 @@ func (that *Downloader) copyGVCFromLocal(fileName string) {
 	tui.PrintInfo(fmt.Sprintf("copying: %s", srcFile))
 	if sumChanged := that.info.CheckSum(fileName, srcFile); sumChanged {
 		if _, err := utils.CopyFile(srcFile, filepath.Join(that.conf.GvcResourceDir, fileName)); err == nil {
+			that.updateGVCVersionFromLocal()
 			that.info.Store()
 		} else {
 			that.info.Load()
 		}
+	}
+}
+
+func (that *Downloader) updateGVCVersionFromLocal() {
+	r, _ := utils.ExecuteSysCommand(true, GetGVCLocalProjectPath(), "git", "describe", "--abbrev=0", "--tags")
+	content, _ := io.ReadAll(r)
+	if len(content) > 0 {
+		that.info.GVCLatestVersion = string(content)
 	}
 }
 
