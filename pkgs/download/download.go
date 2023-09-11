@@ -163,7 +163,7 @@ func (that *Downloader) updateGVCVersionFromLocal() {
 	r, _ := utils.ExecuteSysCommand(true, GetGVCLocalProjectPath(), "git", "describe", "--abbrev=0", "--tags")
 	content, _ := io.ReadAll(r)
 	if len(content) > 0 {
-		that.info.GVCLatestVersion = string(content)
+		that.info.GVCLatestVersion = strings.Trim(string(content), "\n")
 	}
 }
 
