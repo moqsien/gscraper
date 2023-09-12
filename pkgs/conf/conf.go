@@ -172,6 +172,8 @@ func (that *Config) SetDefault() {
 		"https://wanshanziwo.eu.org/ssr/sub",
 		"https://wanshanziwo.eu.org/sip002/sub",
 		"https://wanshanziwo.eu.org/trojan/sub",
+		"http://weoknow.com/data/dayupdate/1/z1.txt",
+		"http://weoknow.com/data/dayupdate/2/z1.txt",
 		"https://api.subcloud.xyz/sub?target=v2ray&url=https%3A%2F%2Fcdn.jsdelivr.net%2Fgh%2Fzyzmzyz%2Ffree-nodes%40master%2FClash.yml&insert=false",
 		"https://api.subcloud.xyz/sub?target=v2ray&url=https%3A%2F%2Fcdn.statically.io%2Fgh%2Fopenrunner%2Fclash-freenode%2Fmain%2Fclash.yaml&insert=false",
 		"https://clashnode.com/wp-content/uploads/{year}/{month}/{year}{month}{day}.txt",
