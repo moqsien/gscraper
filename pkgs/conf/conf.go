@@ -72,6 +72,8 @@ func (that *Config) initiate() {
 }
 
 func (that *Config) SetDefault() {
+	that.LocalProxy = "http://localhost:2023"
+	that.NeoboxKey = "IYj8oCV1Nly9aTTN"
 	that.GithubSpeedupUrl = "https://ghproxy.com/"
 	that.GvcResourceProject = "git@gitlab.com:moqsien/gvc_resources.git"
 	that.UrlList = map[string]string{
