@@ -16,6 +16,10 @@ import (
 	"github.com/moqsien/gscraper/pkgs/conf"
 )
 
+/*
+download and push files for gvc
+*/
+
 var GLOBAL_TO_EXIST bool
 var WaitToSweepSig = make(chan struct{})
 

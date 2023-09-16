@@ -1,12 +1,12 @@
 package main
 
 import (
-	"fmt"
 	"os"
 	"strings"
 
-	utils "github.com/moqsien/goutils/pkgs/gutils"
 	"github.com/moqsien/gscraper/pkgs/cmd"
+	"github.com/moqsien/gscraper/pkgs/conf"
+	"github.com/moqsien/gscraper/pkgs/domain"
 )
 
 func main() {
@@ -27,7 +27,10 @@ func main() {
 		// vg := sites.NewVPNFromGithub(cnf, r)
 		// vg.Run()
 		// fmt.Println(vg.VPNList)
-		u := utils.NewUUID()
-		fmt.Println(strings.ToUpper(u.String()))
+		// u := utils.NewUUID()
+		// fmt.Println(strings.ToUpper(u.String()))
+		cnf := conf.NewConfig()
+		cdomain := domain.NewCFlareDomain(cnf)
+		cdomain.Run()
 	}
 }

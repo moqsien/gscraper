@@ -21,16 +21,18 @@ var (
 )
 
 type Config struct {
-	GithubSpeedupUrl    string            `json,koanf:"github_speedup_url"`
-	GvcResourceDir      string            `json,koanf:"gvc_resource_dir"`
-	GvcResourceProject  string            `json,koanf:"gvc_resource_project"`
-	UrlList             map[string]string `json,koanf:"url_list"`
-	UrlOrder            []string          `json,koanf:"url_order"`
-	GithubVPNSubscriber []string          `json,koanf:"github_vpn_subscriber"`
-	LocalProxy          string            `json,koanf:"local_proxy"`
-	NeoboxKey           string            `json,koanf:"neobox_key"`
-	NeoboxResultFile    string            `json,koanf:"neobox_result_file"`
-	koanfer             *koanfer.JsonKoanfer
+	GithubSpeedupUrl     string            `json,koanf:"github_speedup_url"`
+	GvcResourceDir       string            `json,koanf:"gvc_resource_dir"`
+	GvcResourceProject   string            `json,koanf:"gvc_resource_project"`
+	UrlList              map[string]string `json,koanf:"url_list"`
+	UrlOrder             []string          `json,koanf:"url_order"`
+	GithubVPNSubscriber  []string          `json,koanf:"github_vpn_subscriber"`
+	CloudflareDomainFile string            `json,koanf:"cloudflare_domain_filename"`
+	CloudflareDomains    []string          `json,koanf:"cloudflare_domains"`
+	LocalProxy           string            `json,koanf:"local_proxy"`
+	NeoboxKey            string            `json,koanf:"neobox_key"`
+	NeoboxResultFile     string            `json,koanf:"neobox_result_file"`
+	koanfer              *koanfer.JsonKoanfer
 }
 
 func NewConfig() *Config {
@@ -144,7 +146,6 @@ func (that *Config) SetDefault() {
 		"pyenv_unix.zip",
 		"pyenv_win.zip",
 	}
-	that.NeoboxResultFile = "conf.txt"
 	that.GithubVPNSubscriber = []string{
 		"https://raw.githubusercontent.com/peasoft/NoMoreWalls/master/list.txt",
 		"https://raw.githubusercontent.com/ZywChannel/free/main/sub",
@@ -180,6 +181,48 @@ func (that *Config) SetDefault() {
 		"https://nodefree.org/dy/{year}/{month}/{year}{month}{day}.txt",
 		"https://hiclash.com/wp-content/uploads/{year}/{month}/{year}{month}{day}.txt",
 		"https://wefound.cc/freenode/{year}/{month}/{year}{month}{day}.txt",
+	}
+	that.NeoboxResultFile = "conf.txt"
+
+	that.CloudflareDomainFile = "cloudflare_domains.txt"
+	that.CloudflareDomains = []string{
+		"time.cloudflare.com",
+		// "shopify.com",
+		// "time.is",
+		"icook.hk",
+		"icook.tw",
+		"ip.sb",
+		"japan.com",
+		"malaysia.com",
+		"russia.com",
+		"singapore.com",
+		"www.visa.com",
+		"www.visa.com.sg",
+		"www.visa.com.hk",
+		"www.visa.com.tw",
+		"www.visa.co.jp",
+		"www.visakorea.com",
+		"www.gco.gov.qa",
+		// "www.gov.se",
+		"www.gov.ua",
+		"www.digitalocean.com",
+		"www.csgo.com",
+		"www.shopify.com",
+		"www.whoer.net",
+		"www.whatismyip.com",
+		"www.ipget.net",
+		"www.hugedornains.com",
+		"www.udacity.com",
+		"www.4chan.org",
+		"www.okcupid.com",
+		"www.glassdoor.com",
+		"www.udemy.com",
+		"www.baipiao.eu.org",
+		// "cdn.anycast.eu.org",
+		// "cdn-all.xn--b6gac.eu.org",
+		// "cdn-b100.xn--b6gac.eu.org",
+		// "cdn.xn--b6gac.eu.org",
+		// "edgetunnel.anycast.eu.org",
 	}
 	that.Save()
 	that.ReadGvcResourceDir()
@@ -312,4 +355,21 @@ func (that *Config) ResetNeoboxKey() {
 
 func (that *Config) ShowNeoboxKey() {
 	tui.PrintInfo(fmt.Sprintf("neobox-key: %s\n", that.NeoboxKey))
+}
+
+func (that *Config) AddCFlareDomain(cDomain string) {
+	that.koanfer.Load(that)
+	that.CloudflareDomains = append(that.CloudflareDomains, cDomain)
+	that.Save()
+}
+
+func (that *Config) RemoveCFlareDomain(cDomain string) {
+	that.koanfer.Load(that)
+	for idx, domain := range that.CloudflareDomains {
+		if domain == cDomain {
+			that.CloudflareDomains = append(that.CloudflareDomains[:idx], that.CloudflareDomains[idx+1:]...)
+			break
+		}
+	}
+	that.Save()
 }

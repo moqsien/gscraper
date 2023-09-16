@@ -16,6 +16,10 @@ import (
 	"github.com/moqsien/vpnparser/pkgs/outbound"
 )
 
+/*
+Gather free proxies for neobox/gvc-neobox.
+*/
+
 const (
 	JSON_FILE_NAME = "free_vpn_list.json"
 )

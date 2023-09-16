@@ -8,6 +8,7 @@ import (
 
 	utils "github.com/moqsien/goutils/pkgs/gutils"
 	"github.com/moqsien/gscraper/pkgs/conf"
+	"github.com/moqsien/gscraper/pkgs/domain"
 	"github.com/moqsien/gscraper/pkgs/download"
 	"github.com/moqsien/gscraper/pkgs/sites"
 	cli "github.com/urfave/cli/v2"
@@ -267,6 +268,44 @@ func init() {
 				"pyenv_win.zip",
 			}
 			d.Start(fNames...)
+			return nil
+		},
+	})
+
+	app.Add(&cli.Command{
+		Name:    "add-cf-domains",
+		Aliases: []string{"addcf", "acf"},
+		Usage:   "Add cloudflare domains.",
+		Action: func(ctx *cli.Context) error {
+			cnf := conf.NewConfig()
+			for _, domain := range ctx.Args().Slice() {
+				cnf.Add(domain)
+			}
+			return nil
+		},
+	})
+
+	app.Add(&cli.Command{
+		Name:    "rm-cf-domains",
+		Aliases: []string{"rmcf", "rcf"},
+		Usage:   "Remove cloudflare domains.",
+		Action: func(ctx *cli.Context) error {
+			cnf := conf.NewConfig()
+			for _, domain := range ctx.Args().Slice() {
+				cnf.Remove(domain)
+			}
+			return nil
+		},
+	})
+
+	app.Add(&cli.Command{
+		Name:    "check-cloudflare-domains",
+		Aliases: []string{"chcf", "ccf"},
+		Usage:   "Check cloudflare domains.",
+		Action: func(ctx *cli.Context) error {
+			cnf := conf.NewConfig()
+			cfd := domain.NewCFlareDomain(cnf)
+			cfd.Run()
 			return nil
 		},
 	})
