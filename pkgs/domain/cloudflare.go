@@ -35,8 +35,8 @@ func NewCFlareDomain(cnf *conf.Config) (cfd *CFlareDomain) {
 
 func (that *CFlareDomain) CheckDomain(domainStr string) {
 	conn, err := tls.DialWithDialer(&net.Dialer{
-		Timeout:  time.Second * 1,
-		Deadline: time.Now().Add(time.Second * 5),
+		Timeout:  time.Second * 3,
+		Deadline: time.Now().Add(time.Second * 6),
 	}, "tcp", fmt.Sprintf("%s:443", domainStr), &tls.Config{
 		InsecureSkipVerify: true,
 	})
