@@ -86,6 +86,17 @@ func (that *CFlareDomain) GetFromOfficial() (homePages []string) {
 	return
 }
 
+func (that *CFlareDomain) GetFromGitlabRaw() {
+	f := request.NewFetcher()
+	f.SetUrl("https://gitlab.com/moqsien/gvc_resources/-/raw/main/cloudflare_raw_domains.txt?ref_type=heads")
+	f.Timeout = 10 * time.Second
+	contentStr, _ := f.GetString()
+	for _, domain := range strings.Split(contentStr, "\n") {
+		fmt.Println("[-] ", domain)
+		that.CheckDomain(domain)
+	}
+}
+
 func (that *CFlareDomain) push() {
 	cmdExe := "git"
 	if runtime.GOOS == "windows" {
@@ -137,6 +148,7 @@ func (that *CFlareDomain) Run() {
 			that.CheckDomain(u.Host)
 		}
 	}
+	that.GetFromGitlabRaw()
 	result := []string{}
 	for domain := range that.Result {
 		result = append(result, domain)
