@@ -169,6 +169,7 @@ func (that *Config) SetDefault() {
 		"https://raw.githubusercontent.com/Leon406/SubCrawler/main/sub/share/ssr",
 		"https://raw.githubusercontent.com/Leon406/SubCrawler/main/sub/share/all3",
 		"https://raw.githubusercontent.com/Leon406/SubCrawler/main/sub/share/v2",
+		"https://raw.githubusercontent.com/snakem982/proxypool/main/v2ray3fc8f.txt",
 		"https://sub.sharecentre.online/sub",
 		"https://getafreenode.com/subscribe/?uuid=D213ED80-199B-4A01-9D62-BBCBA9C16226",
 		"https://wanshanziwo.eu.org/vmess/sub?rand=lNdLVPVC&c=US",
