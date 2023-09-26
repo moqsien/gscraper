@@ -172,11 +172,11 @@ func (that *Config) SetDefault() {
 		"https://raw.githubusercontent.com/snakem982/proxypool/main/v2ray3fc8f.txt",
 		"https://sub.sharecentre.online/sub",
 		"https://getafreenode.com/subscribe/?uuid=D213ED80-199B-4A01-9D62-BBCBA9C16226",
-		"https://wanshanziwo.eu.org/vmess/sub?rand=lNdLVPVC&c=US",
-		"https://wanshanziwo.eu.org/vless/sub?rand=lNdLVPVC&c=US",
-		"https://wanshanziwo.eu.org/trojan/sub?rand=lNdLVPVC",
-		"https://wanshanziwo.eu.org/ss/sub?rand=lNdLVPVC&c=US",
-		"https://wanshanziwo.eu.org/ssr/sub?rand=lNdLVPVC",
+		// "https://wanshanziwo.eu.org/vmess/sub?rand=lNdLVPVC&c=US",
+		// "https://wanshanziwo.eu.org/vless/sub?rand=lNdLVPVC&c=US",
+		// "https://wanshanziwo.eu.org/trojan/sub?rand=lNdLVPVC",
+		// "https://wanshanziwo.eu.org/ss/sub?rand=lNdLVPVC&c=US",
+		// "https://wanshanziwo.eu.org/ssr/sub?rand=lNdLVPVC",
 		"http://weoknow.com/data/dayupdate/1/z1.txt",
 		"http://weoknow.com/data/dayupdate/2/z1.txt",
 		"https://api.subcloud.xyz/sub?target=v2ray&url=https%3A%2F%2Fcdn.jsdelivr.net%2Fgh%2Fzyzmzyz%2Ffree-nodes%40master%2FClash.yml&insert=false",
@@ -191,8 +191,6 @@ func (that *Config) SetDefault() {
 	that.CloudflareDomainFile = "cloudflare_domains.txt"
 	that.CloudflareDomains = []string{
 		"time.cloudflare.com",
-		// "shopify.com",
-		// "time.is",
 		"icook.hk",
 		"icook.tw",
 		"ip.sb",
@@ -207,7 +205,6 @@ func (that *Config) SetDefault() {
 		"www.visa.co.jp",
 		"www.visakorea.com",
 		"www.gco.gov.qa",
-		// "www.gov.se",
 		"www.gov.ua",
 		"www.digitalocean.com",
 		"www.csgo.com",
@@ -222,11 +219,6 @@ func (that *Config) SetDefault() {
 		"www.glassdoor.com",
 		"www.udemy.com",
 		"www.baipiao.eu.org",
-		// "cdn.anycast.eu.org",
-		// "cdn-all.xn--b6gac.eu.org",
-		// "cdn-b100.xn--b6gac.eu.org",
-		// "cdn.xn--b6gac.eu.org",
-		// "edgetunnel.anycast.eu.org",
 	}
 	that.Save()
 	that.ReadGvcResourceDir()
