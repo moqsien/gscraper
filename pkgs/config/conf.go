@@ -22,18 +22,23 @@ const (
 	EnableProxyEnvName          string = "ENV_ENABLE_GSER_PROXY"
 )
 
+type FileUrl struct {
+	FileName string `json:"file_name"`
+	Url      string `json:"url"`
+}
+
 type GVCResourceConfig struct {
-	GVCResourceProject string            `json:"gvc_resource_project"`
-	GVCResourceDir     string            `json:"gvc_resource_dir"`
-	APPUrls            map[string]string `json:"app_url_list"`
-	APPUrlOrder        []string          `json:"app_url_order"`
+	GVCResourceProject string          `json:"gvc_resource_project"`
+	GVCResourceDir     string          `json:"gvc_resource_dir"`
+	APPUrls            map[int]FileUrl `json:"app_url_list"`
 }
 
 type NeoboxResourceConfig struct {
-	NeoboxKey             string   `json:"neobox_key"`
-	NeoboxResourceProject string   `json:"neobox_resource_project"`
-	NeoboxResourceDir     string   `json:"neobox_resource_dir"`
-	ProxySubcribeUrlList  []string `json:"subcribe_url_list"`
+	NeoboxKey             string          `json:"neobox_key"`
+	NeoboxResourceProject string          `json:"neobox_resource_project"`
+	NeoboxResourceDir     string          `json:"neobox_resource_dir"`
+	ProxySubcribeUrlList  map[int]string  `json:"subcribe_url_list"`
+	GeoInfoUrls           map[int]FileUrl `json:"geo_info_urls"`
 }
 
 type GSConf struct {
@@ -139,7 +144,7 @@ func (that *GSConf) clone(resourceDir, projectUrl string) (err error) {
 
 func (that *GSConf) SetDefault() {
 	that.NeoboxRConfig.NeoboxResourceProject = "git@gitlab.com:moqsien/neobox_related.git"
-	that.NeoboxRConfig.ProxySubcribeUrlList = []string{
+	subUrls := []string{
 		"https://raw.githubusercontent.com/peasoft/NoMoreWalls/master/list.txt",
 		"https://raw.githubusercontent.com/ZywChannel/free/main/sub",
 		"https://raw.githubusercontent.com/ermaozi01/free_clash_vpn/main/subscribe/v2ray.txt",
@@ -172,9 +177,25 @@ func (that *GSConf) SetDefault() {
 		"https://hiclash.com/wp-content/uploads/{year}/{month}/{year}{month}{day}.txt",
 		"https://wefound.cc/freenode/{year}/{month}/{year}{month}{day}.txt",
 	}
+	for idx, item := range subUrls {
+		that.NeoboxRConfig.ProxySubcribeUrlList[idx] = item
+	}
+
+	geoInfos := map[string]string{
+		"geoip.db":    "https://github.com/lyc8503/sing-box-rules/releases/latest/download/geoip.db",
+		"geosite.db":  "https://github.com/lyc8503/sing-box-rules/releases/latest/download/geosite.db",
+		"geoip.dat":   "https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat",
+		"geosite.dat": "https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat",
+	}
+
+	var index int
+	for k, v := range geoInfos {
+		that.NeoboxRConfig.GeoInfoUrls[index] = FileUrl{FileName: k, Url: v}
+		index++
+	}
 
 	that.GVCRConifg.GVCResourceProject = "git@gitlab.com:moqsien/gvc_resources.git"
-	that.GVCRConifg.APPUrls = map[string]string{
+	appUrls := map[string]string{
 		"gsudo_portable.zip":              "https://github.com/gerardog/gsudo/releases//latest/download/gsudo.portable.zip",
 		"gvc_darwin-amd64.zip":            "https://github.com/moqsien/gvc/releases/latest/download/gvc_darwin-amd64.zip",
 		"gvc_darwin-arm64.zip":            "https://github.com/moqsien/gvc/releases/latest/download/gvc_darwin-arm64.zip",
@@ -182,10 +203,6 @@ func (that *GSConf) SetDefault() {
 		"gvc_linux-arm64.zip":             "https://github.com/moqsien/gvc/releases/latest/download/gvc_linux-arm64.zip",
 		"gvc_windows-amd64.zip":           "https://github.com/moqsien/gvc/releases/latest/download/gvc_windows-amd64.zip",
 		"gvc_windows-arm64.zip":           "https://github.com/moqsien/gvc/releases/latest/download/gvc_windows-arm64.zip",
-		"geoip.db":                        "https://github.com/lyc8503/sing-box-rules/releases/latest/download/geoip.db",
-		"geosite.db":                      "https://github.com/lyc8503/sing-box-rules/releases/latest/download/geosite.db",
-		"geoip.dat":                       "https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat",
-		"geosite.dat":                     "https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat",
 		"protoc_win64.zip":                "https://github.com/protocolbuffers/protobuf/releases/latest/download/protoc-%s-win64.zip",
 		"protoc_linux_x86_64.zip":         "https://github.com/protocolbuffers/protobuf/releases/latest/download/protoc-%s-linux-x86_64.zip",
 		"protoc_linux_aarch_64.zip":       "https://github.com/protocolbuffers/protobuf/releases/latest/download/protoc-%s-linux-aarch_64.zip",
@@ -210,42 +227,11 @@ func (that *GSConf) SetDefault() {
 		"pyenv_unix.zip":                  "https://github.com/pyenv/pyenv/archive/refs/heads/master.zip",
 		"pyenv_win.zip":                   "https://github.com/pyenv-win/pyenv-win/archive/refs/heads/master.zip",
 	}
-
-	that.GVCRConifg.APPUrlOrder = []string{
-		"gvc_darwin-amd64.zip",
-		"gvc_darwin-arm64.zip",
-		"gvc_linux-amd64.zip",
-		"gvc_linux-arm64.zip",
-		"gvc_windows-amd64.zip",
-		"gvc_windows-arm64.zip",
-		"geoip.db",
-		"geosite.db",
-		"geoip.dat",
-		"geosite.dat",
-		"gsudo_portable.zip",
-		"protoc_win64.zip",
-		"protoc_linux_x86_64.zip",
-		"protoc_linux_aarch_64.zip",
-		"protoc_osx_universal_binary.zip",
-		"vlang_linux.zip",
-		"vlang_macos.zip",
-		"vlang_windows.zip",
-		"v_analyzer_darwin_arm64.zip",
-		"v_analyzer_darwin_x86_64.zip",
-		"v_analyzer_linux_x86_64.zip",
-		"v_analyzer_windows_x86_64.zip",
-		"typst_arm_macos.tar.xz",
-		"typst_x64_macos.tar.xz",
-		"typst_arm_linux.tar.xz",
-		"typst_x64_linux.tar.xz",
-		"typst_x64_windows.zip",
-		"nvim_linux64.tar.gz",
-		"nvim_macos.tar.gz",
-		"nvim_win64.zip",
-		"vcpkg.zip",
-		"vcpkg_tool.zip",
-		"pyenv_unix.zip",
-		"pyenv_win.zip",
+	index = 0
+	for k, v := range appUrls {
+		that.GVCRConifg.APPUrls[index] = FileUrl{FileName: k, Url: v}
+		index++
 	}
+
 	that.LocalProxy = "http://localhost:2023"
 }
