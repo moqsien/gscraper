@@ -1,12 +1,10 @@
 package main
 
 import (
+	"fmt"
 	"os"
 
-	"github.com/moqsien/gscraper/pkgs/config"
-	"github.com/moqsien/gscraper/pkgs/proxy"
-	"github.com/moqsien/gscraper/pkgs/proxy/domains"
-	"github.com/moqsien/gscraper/pkgs/proxy/proxies"
+	"github.com/moqsien/goutils/pkgs/crypt"
 )
 
 func main() {
@@ -31,14 +29,19 @@ func main() {
 	// })
 	// fq.Run()
 
-	runner := proxy.NewProxyRunner()
-	runner.AddSite(proxies.NewSubscribers())
-	runner.AddSite(proxies.NewWSZiwo())
-	runner.AddSite(proxies.NewFreeFQ())
-	runner.AddSite(proxies.NewGeoInfo())
-	runner.AddSite(domains.NewCFDomains())
-	os.Setenv(config.EnableGithubSpeedupEnvName, "1")
-	os.Setenv(config.EnableProxyEnvName, "1")
+	// runner := proxy.NewProxyRunner()
+	// runner.AddSite(proxies.NewSubscribers())
+	// runner.AddSite(proxies.NewWSZiwo())
+	// runner.AddSite(proxies.NewFreeFQ())
+	// runner.AddSite(proxies.NewGeoInfo())
+	// runner.AddSite(domains.NewCFDomains())
+	// os.Setenv(config.EnableGithubSpeedupEnvName, "1")
+	// os.Setenv(config.EnableProxyEnvName, "1")
 
-	runner.Run()
+	// runner.Run()
+
+	content, _ := os.ReadFile(`C:\Users\moqsien\.gvc\proxy_files\neobox_vpns_encrypted.txt`)
+	c := crypt.NewCrypt("eEm3dzfTd6Cob2HU")
+	r, _ := c.AesDecrypt(content)
+	fmt.Println(string(r))
 }
