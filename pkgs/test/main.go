@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/moqsien/gscraper/pkgs/config"
@@ -22,11 +21,21 @@ func main() {
 	// })
 	// fproxy.Run()
 
+	// os.Setenv(config.EnableProxyEnvName, "1")
+	// fq := proxies.NewFreeFQ()
+	// fq.SetHandler(func(s []string) {
+	// 	fmt.Println(s)
+	// 	fmt.Println(len(s))
+	// })
+	// fq.Run()
+
+	runner := proxies.NewProxyRunner()
+	runner.AddSite(proxies.NewSubscribers())
+	runner.AddSite(proxies.NewWSZiwo())
+	runner.AddSite(proxies.NewFreeFQ())
+	runner.AddSite(proxies.NewGeoInfo())
+	os.Setenv(config.EnableGithubSpeedupEnvName, "1")
 	os.Setenv(config.EnableProxyEnvName, "1")
-	fq := proxies.NewFreeFQ()
-	fq.SetHandler(func(s []string) {
-		fmt.Println(s)
-		fmt.Println(len(s))
-	})
-	fq.Run()
+
+	runner.Run()
 }

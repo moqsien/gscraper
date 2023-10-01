@@ -250,7 +250,10 @@ func (that *GSConf) SetDefault() {
 func PrepareSubscribeUrl(sUrl string) (r string) {
 	if strings.Contains(sUrl, "raw.githubusercontent.com") && os.Getenv(EnableGithubSpeedupEnvName) != "" {
 		sUrl = GithubSpeedUpUrl + sUrl
+	} else if strings.Contains(sUrl, "github.com/") && os.Getenv(EnableGithubSpeedupEnvName) != "" {
+		sUrl = GithubSpeedUpUrl + sUrl
 	}
+
 	r = sUrl
 	if strings.Contains(sUrl, "{") && strings.Contains(sUrl, "}") {
 		var cstZone = time.FixedZone("CST", 8*3600)

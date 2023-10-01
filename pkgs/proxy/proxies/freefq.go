@@ -22,6 +22,7 @@ type FreeFQ struct {
 	handler func([]string)
 	CNF     *config.GSConf
 	urls    []string
+	host    string
 }
 
 func NewFreeFQ() (ffq *FreeFQ) {
@@ -35,6 +36,7 @@ func NewFreeFQ() (ffq *FreeFQ) {
 			"https://freefq.com/free-trojan/",
 			"https://freefq.com/free-ssr/",
 		},
+		host: "https://freefq.com",
 	}
 
 	proxyEnvName := "FREE_FQ_PROXY"
@@ -85,7 +87,7 @@ func (that *FreeFQ) getUrls() (r []string) {
 		if doc, err := goquery.NewDocumentFromReader(bytes.NewBufferString(content)); err == nil && doc != nil {
 			href := doc.Find("td.news_list").Find("ul").First().Find("li").First().Find("a").AttrOr("href", "")
 			if href != "" {
-				detailUrl := "https://freefq.com" + href
+				detailUrl := that.host + href
 				gprint.PrintInfo("Dowload: %s", detailUrl)
 				content = that.getUrl(detailUrl)
 				if doc, err := goquery.NewDocumentFromReader(bytes.NewBufferString(content)); err == nil && doc != nil {
