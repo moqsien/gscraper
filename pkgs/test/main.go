@@ -1,7 +1,10 @@
 package main
 
 import (
-	"github.com/moqsien/goutils/pkgs/gtea/gprint"
+	"fmt"
+	"os"
+
+	"github.com/moqsien/gscraper/pkgs/config"
 	"github.com/moqsien/gscraper/pkgs/proxy/proxies"
 )
 
@@ -13,9 +16,17 @@ func main() {
 	// })
 	// sub.Run()
 
-	fproxy := proxies.NewWSZiwo()
-	fproxy.SetHandler(func(result []string) {
-		gprint.PrintInfo("find rawUris: %d", len(result))
+	// fproxy := proxies.NewWSZiwo()
+	// fproxy.SetHandler(func(result []string) {
+	// 	gprint.PrintInfo("find rawUris: %d", len(result))
+	// })
+	// fproxy.Run()
+
+	os.Setenv(config.EnableProxyEnvName, "1")
+	fq := proxies.NewFreeFQ()
+	fq.SetHandler(func(s []string) {
+		fmt.Println(s)
+		fmt.Println(len(s))
 	})
-	fproxy.Run()
+	fq.Run()
 }
