@@ -2,5 +2,9 @@
 gvc_resources/*
 gvc_resources
 .vscode
-*.json
+*list.json
 test/*
+build/dar*
+build/linux*
+build/win*
+

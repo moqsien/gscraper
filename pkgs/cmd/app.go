@@ -1,4 +1,4 @@
-package main
+package cmd
 
 import (
 	"fmt"
@@ -54,8 +54,4 @@ func StartApp() {
 	sig.ListenSignal()
 	app.Run()
 	w.Wait()
-}
-
-func main() {
-	StartApp()
 }
