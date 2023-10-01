@@ -32,7 +32,7 @@ type MapValue interface {
 	string | FileUrl
 }
 
-func getMax[T MapValue](list map[int]T) (maxIdx int) {
+func GetMax[T MapValue](list map[int]T) (maxIdx int) {
 	for idx := range list {
 		if idx > maxIdx {
 			maxIdx = idx
@@ -43,7 +43,7 @@ func getMax[T MapValue](list map[int]T) (maxIdx int) {
 
 func (that *GSConf) AddSubscribeUrlForNeobox(subUrl string) {
 	that.Load()
-	idx := getMax(that.NeoboxRConfig.ProxySubcribeUrlList) + 1
+	idx := GetMax(that.NeoboxRConfig.ProxySubcribeUrlList) + 1
 	that.NeoboxRConfig.ProxySubcribeUrlList[idx] = subUrl
 	that.Save()
 }
@@ -60,7 +60,7 @@ func (that *GSConf) DelSubscribeUrlForNeobox(subUrl string) {
 
 func (that *GSConf) AddGVCAppUrl(appUrl string) {
 	that.Load()
-	idx := getMax(that.GVCRConifg.APPUrls) + 1
+	idx := GetMax(that.GVCRConifg.APPUrls) + 1
 	fileName := getNameFromUrl(appUrl)
 	that.GVCRConifg.APPUrls[idx] = FileUrl{Url: appUrl, FileName: fileName}
 	that.Save()
@@ -78,7 +78,7 @@ func (that *GSConf) DelGVCAppUrl(appNameOrUrl string) {
 
 func (that *GSConf) ShowAppUrls() {
 	that.Load()
-	maxIndex := getMax(that.GVCRConifg.APPUrls)
+	maxIndex := GetMax(that.GVCRConifg.APPUrls)
 	for i := 0; i < maxIndex; i++ {
 		if item := that.GVCRConifg.APPUrls[i]; item.Url != "" && item.FileName != "" {
 			gprint.PrintInfo("%s: %s", item.FileName, item.Url)

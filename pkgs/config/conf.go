@@ -5,6 +5,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 
 	"github.com/moqsien/goutils/pkgs/gtea/gprint"
 	"github.com/moqsien/goutils/pkgs/gtea/input"
@@ -20,6 +21,8 @@ const (
 	NeoboxResourceLocalDirName  string = "neobox_related"
 	GVCResourceLocalDirName     string = "gvc_resources"
 	EnableProxyEnvName          string = "ENV_ENABLE_GSER_PROXY"
+	EnableGithubSpeedupEnvName  string = "ENV_ENABLE_GSER_GHPROXY"
+	GithubSpeedUpUrl            string = "https://ghproxy.com/"
 )
 
 type FileUrl struct {
@@ -48,7 +51,15 @@ type GSConf struct {
 }
 
 func NewGSConf() (gsc *GSConf) {
-	gsc = &GSConf{}
+	gsc = &GSConf{
+		GVCRConifg: &GVCResourceConfig{
+			APPUrls: map[int]FileUrl{},
+		},
+		NeoboxRConfig: &NeoboxResourceConfig{
+			ProxySubcribeUrlList: map[int]string{},
+			GeoInfoUrls:          map[int]FileUrl{},
+		},
+	}
 	gsc.Initiate()
 	return
 }
@@ -234,4 +245,19 @@ func (that *GSConf) SetDefault() {
 	}
 
 	that.LocalProxy = "http://localhost:2023"
+}
+
+func PrepareSubscribeUrl(sUrl string) (r string) {
+	if strings.Contains(sUrl, "raw.githubusercontent.com") && os.Getenv(EnableGithubSpeedupEnvName) != "" {
+		sUrl = GithubSpeedUpUrl + sUrl
+	}
+	r = sUrl
+	if strings.Contains(sUrl, "{") && strings.Contains(sUrl, "}") {
+		var cstZone = time.FixedZone("CST", 8*3600)
+		now := time.Now().In(cstZone)
+		r = strings.ReplaceAll(r, "{year}", now.Format("2006"))
+		r = strings.ReplaceAll(r, "{month}", now.Format("01"))
+		r = strings.ReplaceAll(r, "{day}", now.Format("02"))
+	}
+	return
 }
