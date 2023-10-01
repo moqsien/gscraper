@@ -162,7 +162,8 @@ func (that *ProxyRunner) Run() {
 			return
 		}
 		if content, err := json.Marshal(that.Result); err == nil {
-			cc := crypt.NewCrypt(that.cnf.NeoboxRConfig.NeoboxKey)
+			gprint.PrintWarning("neobox key: %s", that.cnf.NeoboxRConfig.NeoboxKey)
+			cc := crypt.NewCrptWithKey([]byte(that.cnf.NeoboxRConfig.NeoboxKey))
 			if r, err := cc.AesEncrypt([]byte(content)); err == nil {
 				os.WriteFile(fPath, r, os.ModePerm)
 			}
