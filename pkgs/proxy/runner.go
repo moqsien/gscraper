@@ -133,15 +133,6 @@ func (that *ProxyRunner) Run() {
 						that.Result.AddItem(proxyItem)
 						that.r[proxyStr] = struct{}{}
 					}
-					gprint.PrintSuccess("Total Proxies: %d", that.Result.Len())
-					gprint.PrintSuccess(
-						"vmess[%d]; vless[%d]; ss[%d]; trojan[%d]; ssr[%d]",
-						that.Result.VmessTotal,
-						that.Result.VlessTotal,
-						that.Result.SSTotal,
-						that.Result.TrojanTotal,
-						that.Result.SSRTotal,
-					)
 				}
 			})
 			doProxy = true
@@ -154,6 +145,15 @@ func (that *ProxyRunner) Run() {
 		site.Run()
 	}
 	if doProxy {
+		gprint.PrintSuccess("Total Proxies: %d", that.Result.Len())
+		gprint.PrintSuccess(
+			"vmess[%d]; vless[%d]; ss[%d]; trojan[%d]; ssr[%d]",
+			that.Result.VmessTotal,
+			that.Result.VlessTotal,
+			that.Result.SSTotal,
+			that.Result.TrojanTotal,
+			that.Result.SSRTotal,
+		)
 		fPath := filepath.Join(that.cnf.NeoboxRConfig.NeoboxResourceDir, config.NeoboxResultFileName)
 		var cstZone = time.FixedZone("CST", 8*3600)
 		now := time.Now().In(cstZone)
