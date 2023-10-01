@@ -4,6 +4,7 @@ import (
 	"os"
 
 	"github.com/moqsien/gscraper/pkgs/config"
+	"github.com/moqsien/gscraper/pkgs/proxy/domains"
 	"github.com/moqsien/gscraper/pkgs/proxy/proxies"
 )
 
@@ -34,6 +35,7 @@ func main() {
 	runner.AddSite(proxies.NewWSZiwo())
 	runner.AddSite(proxies.NewFreeFQ())
 	runner.AddSite(proxies.NewGeoInfo())
+	runner.AddSite(domains.NewCFDomains())
 	os.Setenv(config.EnableGithubSpeedupEnvName, "1")
 	os.Setenv(config.EnableProxyEnvName, "1")
 
