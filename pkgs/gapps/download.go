@@ -240,5 +240,22 @@ func (that *AppDownloader) Start(filenames ...string) {
 }
 
 func (that *AppDownloader) Push() {
-	that.git.CommitAndPush("update softwares")
+	cmdName := that.GetGitCmd()
+	_, err := utils.ExecuteSysCommand(false, that.conf.GVCRConifg.GVCResourceDir, cmdName, "add", ".")
+	if err != nil {
+		tui.PrintError(err)
+		os.Exit(1)
+	}
+
+	_, err = utils.ExecuteSysCommand(false, that.conf.GVCRConifg.GVCResourceDir, cmdName, "commit", "-m", `update`)
+	if err != nil {
+		tui.PrintError(err)
+		os.Exit(1)
+	}
+
+	_, err = utils.ExecuteSysCommand(false, that.conf.GVCRConifg.GVCResourceDir, cmdName, "push")
+	if err != nil {
+		tui.PrintError(err)
+		os.Exit(1)
+	}
 }
