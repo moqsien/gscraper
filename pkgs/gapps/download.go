@@ -11,6 +11,7 @@ import (
 
 	archiver "github.com/mholt/archiver/v3"
 	"github.com/moqsien/goutils/pkgs/ggit"
+	"github.com/moqsien/goutils/pkgs/gtea/gprint"
 	tui "github.com/moqsien/goutils/pkgs/gtui"
 	utils "github.com/moqsien/goutils/pkgs/gutils"
 	"github.com/moqsien/goutils/pkgs/request"
@@ -92,7 +93,7 @@ func (that *AppDownloader) getLatestTag(dUrl string) (tag string) {
 	}
 	_url = fmt.Sprintf("%s/releases/latest", _url)
 	_url = config.PrepareSubscribeUrl(_url)
-
+	that.fetcher.SetUrl(_url)
 	that.fetcher.Timeout = time.Minute
 	that.fetcher.RetryTimes = 2
 	if resp := that.fetcher.Get(); resp != nil {
@@ -121,7 +122,7 @@ func (that *AppDownloader) download(fileName, dUrl string) {
 
 	that.fetcher.Timeout = time.Minute * 20
 	that.fetcher.Url = config.PrepareSubscribeUrl(_url)
-	tui.PrintInfo("[>>>] ", that.fetcher.Url)
+	gprint.PrintInfo("[>>>] %s", that.fetcher.Url)
 
 	that.fetcher.SetThreadNum(2)
 

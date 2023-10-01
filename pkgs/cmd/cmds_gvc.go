@@ -1,16 +1,32 @@
 package main
 
 import (
+	"os"
+
+	"github.com/moqsien/gscraper/pkgs/config"
 	"github.com/moqsien/gscraper/pkgs/gapps"
 	cli "github.com/urfave/cli/v2"
 )
 
 func IniteGVC() {
+	var disableGHProxy bool
 	app.Add(&cli.Command{
 		Name:    "download-apps-for-gvc",
 		Aliases: []string{"dapps", "dag"},
 		Usage:   "Download gvc files.",
+		Flags: []cli.Flag{
+			&cli.BoolFlag{
+				Name:        "disable-ghproxy",
+				Aliases:     []string{"dg", "d"},
+				Destination: &disableGHProxy,
+				Usage:       "disable using ghproxy.com to speedup.",
+			},
+		},
 		Action: func(ctx *cli.Context) error {
+			if !disableGHProxy {
+				os.Setenv(config.EnableGithubSpeedupEnvName, "1")
+			}
+
 			fNames := ctx.Args().Slice()
 			d := gapps.NewDownloader()
 			d.Start(fNames...)
@@ -22,7 +38,18 @@ func IniteGVC() {
 		Name:    "download-gvc",
 		Aliases: []string{"downgvc", "dg"},
 		Usage:   "Download gvc files.",
+		Flags: []cli.Flag{
+			&cli.BoolFlag{
+				Name:        "disable-ghproxy",
+				Aliases:     []string{"dg", "d"},
+				Destination: &disableGHProxy,
+				Usage:       "disable using ghproxy.com to speedup.",
+			},
+		},
 		Action: func(ctx *cli.Context) error {
+			if !disableGHProxy {
+				os.Setenv(config.EnableGithubSpeedupEnvName, "1")
+			}
 			d := gapps.NewDownloader()
 			fNames := []string{
 				"gvc_darwin-amd64.zip",
@@ -41,7 +68,18 @@ func IniteGVC() {
 		Name:    "download-other",
 		Aliases: []string{"downother", "do"},
 		Usage:   "Download files except gvc.",
+		Flags: []cli.Flag{
+			&cli.BoolFlag{
+				Name:        "disable-ghproxy",
+				Aliases:     []string{"dg", "d"},
+				Destination: &disableGHProxy,
+				Usage:       "disable using ghproxy.com to speedup.",
+			},
+		},
 		Action: func(ctx *cli.Context) error {
+			if !disableGHProxy {
+				os.Setenv(config.EnableGithubSpeedupEnvName, "1")
+			}
 			d := gapps.NewDownloader()
 			fNames := []string{
 				"gsudo_portable.zip",

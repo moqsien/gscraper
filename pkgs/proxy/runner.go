@@ -133,6 +133,15 @@ func (that *ProxyRunner) Run() {
 						that.Result.AddItem(proxyItem)
 						that.r[proxyStr] = struct{}{}
 					}
+					gprint.PrintSuccess("Total Proxies: %d", that.Result.Len())
+					gprint.PrintSuccess(
+						"vmess[%d]; vless[%d]; ss[%d]; trojan[%d]; ssr[%d]",
+						that.Result.VmessTotal,
+						that.Result.VlessTotal,
+						that.Result.SSTotal,
+						that.Result.TrojanTotal,
+						that.Result.SSRTotal,
+					)
 				}
 			})
 			doProxy = true
@@ -142,7 +151,6 @@ func (that *ProxyRunner) Run() {
 			})
 		default:
 		}
-
 		site.Run()
 	}
 	if doProxy {
@@ -160,5 +168,6 @@ func (that *ProxyRunner) Run() {
 			}
 		}
 	}
+	gprint.PrintInfo("push to remote repository...")
 	that.git.CommitAndPush("update")
 }
