@@ -13,7 +13,7 @@ func IniteGVC() {
 	app.Add(&cli.Command{
 		Name:    "download-apps-for-gvc",
 		Aliases: []string{"dapps", "dag"},
-		Usage:   "Download gvc files.",
+		Usage:   "Download files.",
 		Flags: []cli.Flag{
 			&cli.BoolFlag{
 				Name:        "disable-ghproxy",
