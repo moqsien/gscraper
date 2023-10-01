@@ -69,7 +69,7 @@ func (that *Info) CheckSum(filename, tempLocalPath string) (updated bool) {
 }
 
 func (that *Info) Store() {
-	if content, err := json.Marshal(that.Result); err == nil {
+	if content, err := json.MarshalIndent(that.Result, "", "    "); err == nil {
 		os.WriteFile(that.path, content, os.ModePerm)
 	}
 }
