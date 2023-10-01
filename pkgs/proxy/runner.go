@@ -116,6 +116,7 @@ func (that *ProxyRunner) wrapItem(rawUri string) *outbound.ProxyItem {
 }
 
 func (that *ProxyRunner) Run() {
+	doProxy := false
 	that.r = map[string]struct{}{}
 	that.Result = outbound.NewResult()
 	that.git.SetWorkDir(that.cnf.NeoboxRConfig.NeoboxResourceDir)
@@ -134,6 +135,7 @@ func (that *ProxyRunner) Run() {
 					}
 				}
 			})
+			doProxy = true
 		case "domains":
 			site.SetHandler(func(result []string) {
 				gprint.PrintInfo("Find %d available domains", len(result))
@@ -143,17 +145,19 @@ func (that *ProxyRunner) Run() {
 
 		site.Run()
 	}
-	fPath := filepath.Join(that.cnf.NeoboxRConfig.NeoboxResourceDir, config.NeoboxResultFileName)
-	var cstZone = time.FixedZone("CST", 8*3600)
-	now := time.Now().In(cstZone)
-	that.Result.UpdateAt = now.Format("2006-01-02 15:04:05")
-	if that.Result.Len() <= 0 {
-		return
-	}
-	if content, err := json.Marshal(that.Result); err == nil {
-		cc := crypt.NewCrypt(that.cnf.NeoboxRConfig.NeoboxKey)
-		if r, err := cc.AesEncrypt([]byte(content)); err == nil {
-			os.WriteFile(fPath, r, os.ModePerm)
+	if doProxy {
+		fPath := filepath.Join(that.cnf.NeoboxRConfig.NeoboxResourceDir, config.NeoboxResultFileName)
+		var cstZone = time.FixedZone("CST", 8*3600)
+		now := time.Now().In(cstZone)
+		that.Result.UpdateAt = now.Format("2006-01-02 15:04:05")
+		if that.Result.Len() <= 0 {
+			return
+		}
+		if content, err := json.Marshal(that.Result); err == nil {
+			cc := crypt.NewCrypt(that.cnf.NeoboxRConfig.NeoboxKey)
+			if r, err := cc.AesEncrypt([]byte(content)); err == nil {
+				os.WriteFile(fPath, r, os.ModePerm)
+			}
 		}
 	}
 	that.git.CommitAndPush("update")

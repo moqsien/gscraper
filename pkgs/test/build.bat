@@ -1,0 +1,1 @@
+go build -o gscraper.exe ..\cmd\

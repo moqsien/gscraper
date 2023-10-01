@@ -87,7 +87,9 @@ func (that *GSConf) ShowAppUrls() {
 }
 
 func (that *GSConf) SetNeoboxKey() {
+	that.Load()
 	that.NeoboxRConfig.NeoboxKey = gutils.RandomString(16)
+	that.Save()
 	that.ShowNeoboxKey()
 }
 
