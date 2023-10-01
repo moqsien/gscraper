@@ -20,7 +20,6 @@ type CFDomains struct {
 	handler  func([]string)
 	lock     *sync.Mutex
 	sendChan chan string
-	// git      *ggit.Git
 }
 
 func NewCFDomains() (cfd *CFDomains) {
@@ -29,7 +28,6 @@ func NewCFDomains() (cfd *CFDomains) {
 		Result:   map[string]struct{}{},
 		lock:     &sync.Mutex{},
 		sendChan: make(chan string, 10),
-		// git:      ggit.NewGit(),
 	}
 	return cfd
 }
@@ -44,6 +42,10 @@ func (that *CFDomains) send(hostList []string) {
 
 func (that *CFDomains) SetHandler(handler func([]string)) {
 	that.handler = handler
+}
+
+func (that *CFDomains) Type() string {
+	return "domains"
 }
 
 func (that *CFDomains) CheckDomain(domainStr string) {
@@ -71,10 +73,7 @@ func (that *CFDomains) CheckDomain(domainStr string) {
 	}
 }
 
-func (that *CFDomains) Run() {
-	// that.git.SetWorkDir(that.CNF.NeoboxRConfig.NeoboxResourceDir)
-	// that.git.PullBySSH()
-
+func (that *CFDomains) handleDomains() {
 	hostList := GetFromOfficial()
 	hostList2 := strings.Split(config.CF_Raw_Domains, "\n")
 	hostList = append(hostList, hostList2...)
@@ -113,5 +112,15 @@ func (that *CFDomains) Run() {
 	r := strings.Join(rList, "\n")
 	fPath := filepath.Join(that.CNF.NeoboxRConfig.NeoboxResourceDir, config.CloudflareDomainFileName)
 	os.WriteFile(fPath, []byte(r), os.ModePerm)
-	// that.git.CommitAndPush("update domains")
+}
+
+func (that *CFDomains) Run() {
+	that.handleDomains()
+	result := []string{}
+	for domain := range that.Result {
+		result = append(result, domain)
+	}
+	if that.handler != nil {
+		that.handler(result)
+	}
 }

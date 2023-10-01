@@ -49,6 +49,10 @@ func (that *FreeFQ) SetHandler(handler func([]string)) {
 	that.handler = handler
 }
 
+func (that *FreeFQ) Type() string {
+	return "proxies"
+}
+
 func (that *FreeFQ) getUrl(sUrl string) (r string) {
 	var c *http.Client
 	if os.Getenv(config.EnableProxyEnvName) != "" {

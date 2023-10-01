@@ -26,6 +26,10 @@ func (that *GeoInfo) SetHandler(handler func([]string)) {
 	that.handler = handler
 }
 
+func (that *GeoInfo) Type() string {
+	return "files"
+}
+
 func (that *GeoInfo) download() {
 	maxIndex := config.GetMax(that.CNF.NeoboxRConfig.GeoInfoUrls)
 	for i := 0; i <= maxIndex; i++ {

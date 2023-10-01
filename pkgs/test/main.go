@@ -4,6 +4,7 @@ import (
 	"os"
 
 	"github.com/moqsien/gscraper/pkgs/config"
+	"github.com/moqsien/gscraper/pkgs/proxy"
 	"github.com/moqsien/gscraper/pkgs/proxy/domains"
 	"github.com/moqsien/gscraper/pkgs/proxy/proxies"
 )
@@ -30,7 +31,7 @@ func main() {
 	// })
 	// fq.Run()
 
-	runner := proxies.NewProxyRunner()
+	runner := proxy.NewProxyRunner()
 	runner.AddSite(proxies.NewSubscribers())
 	runner.AddSite(proxies.NewWSZiwo())
 	runner.AddSite(proxies.NewFreeFQ())

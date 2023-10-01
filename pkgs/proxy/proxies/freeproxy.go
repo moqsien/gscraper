@@ -36,6 +36,10 @@ func (that *WSZiwo) SetHandler(handler func([]string)) {
 	that.handler = handler
 }
 
+func (that *WSZiwo) Type() string {
+	return "proxies"
+}
+
 func (that *WSZiwo) getRand() {
 	that.fetcher.SetUrl(that.url)
 	content, _ := that.fetcher.GetString()

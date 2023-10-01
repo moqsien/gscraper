@@ -1,4 +1,4 @@
-package proxies
+package proxy
 
 import (
 	"encoding/json"
@@ -82,6 +82,7 @@ func ParseRawUri(rawUri string) (result string) {
 type ISite interface {
 	SetHandler(handler func([]string))
 	Run()
+	Type() string
 }
 
 type ProxyRunner struct {
@@ -120,17 +121,26 @@ func (that *ProxyRunner) Run() {
 	that.git.SetWorkDir(that.cnf.NeoboxRConfig.NeoboxResourceDir)
 	that.git.PullBySSH()
 	for _, site := range that.sites {
-		site.SetHandler(func(result []string) {
-			for _, rawUri := range result {
-				rawUri = ParseRawUri(rawUri)
-				proxyItem := that.wrapItem(rawUri)
-				proxyStr := fmt.Sprintf("%s%s:%d", proxyItem.Scheme, proxyItem.Address, proxyItem.Port)
-				if _, ok := that.r[proxyStr]; !ok {
-					that.Result.AddItem(proxyItem)
-					that.r[proxyStr] = struct{}{}
+		switch site.Type() {
+		case "proxies":
+			site.SetHandler(func(result []string) {
+				for _, rawUri := range result {
+					rawUri = ParseRawUri(rawUri)
+					proxyItem := that.wrapItem(rawUri)
+					proxyStr := fmt.Sprintf("%s%s:%d", proxyItem.Scheme, proxyItem.Address, proxyItem.Port)
+					if _, ok := that.r[proxyStr]; !ok {
+						that.Result.AddItem(proxyItem)
+						that.r[proxyStr] = struct{}{}
+					}
 				}
-			}
-		})
+			})
+		case "domains":
+			site.SetHandler(func(result []string) {
+				gprint.PrintInfo("Find %d available domains", len(result))
+			})
+		default:
+		}
+
 		site.Run()
 	}
 	fPath := filepath.Join(that.cnf.NeoboxRConfig.NeoboxResourceDir, config.NeoboxResultFileName)

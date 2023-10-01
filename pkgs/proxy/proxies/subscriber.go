@@ -3,6 +3,7 @@ package proxies
 import (
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/moqsien/goutils/pkgs/crypt"
 	"github.com/moqsien/goutils/pkgs/gtea/gprint"
@@ -22,11 +23,16 @@ func NewSubscribers() (sub *Subscribers) {
 		fetcher: request.NewFetcher(),
 		CNF:     config.NewGSConf(),
 	}
+	sub.fetcher.Timeout = 30 * time.Second
 	return
 }
 
 func (that *Subscribers) SetHandler(handler func([]string)) {
 	that.handler = handler
+}
+
+func (that *Subscribers) Type() string {
+	return "proxies"
 }
 
 func (that *Subscribers) getSubUrl() {
