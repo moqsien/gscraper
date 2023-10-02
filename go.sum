@@ -242,6 +242,8 @@ github.com/mholt/archiver/v3 v3.5.1 h1:rDjOBX9JSF5BvoJGvjqK479aL70qh9DIpZCl+k7Cl
 github.com/mholt/archiver/v3 v3.5.1/go.mod h1:e3dqJ7H78uzsRSEACH1joayhuSyhnonssnDhppzS1L4=
 github.com/moqsien/goutils v0.5.2 h1:jjK5tqZE9ylWbO9+0Hp8uzphNVya4VMgkq5l8YpcZyE=
 github.com/moqsien/goutils v0.5.2/go.mod h1:+V08oIc5aU9/VjLdK5mAVSlKDK+FeHfqNq7TCw90eNs=
+github.com/moqsien/goutils v0.5.4 h1:JApZu9a24kH+zpIdkygVwE4yXcb7v04ogQ1BQlKBTbY=
+github.com/moqsien/goutils v0.5.4/go.mod h1:+V08oIc5aU9/VjLdK5mAVSlKDK+FeHfqNq7TCw90eNs=
 github.com/moqsien/vpnparser v0.2.3 h1:xah8f8LQiZd/zklayTSUHnCM+jZywF7A6+rgx7I+eBw=
 github.com/moqsien/vpnparser v0.2.3/go.mod h1:Dcy/NtnfOIqkwdPDvuiU1gqGIoUhIYFiZSeWttTVd4s=
 github.com/moqsien/xtractr v0.0.1 h1:LT7R2pDAA9ttuMXtvSq5L2/Ufb9K9UsARNJe69qek7s=
