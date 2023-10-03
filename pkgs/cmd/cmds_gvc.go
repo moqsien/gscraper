@@ -254,4 +254,30 @@ func IniteGVC() {
 			return nil
 		},
 	})
+
+	app.Add(&cli.Command{
+		Name:    "download-win-git",
+		Aliases: []string{"downgit", "wgit"},
+		Usage:   "Download windows git files.",
+		Flags: []cli.Flag{
+			&cli.BoolFlag{
+				Name:        "disable-ghproxy",
+				Aliases:     []string{"dg", "d"},
+				Destination: &disableGHProxy,
+				Usage:       "disable using ghproxy.com to speedup.",
+			},
+		},
+		Action: func(ctx *cli.Context) error {
+			if !disableGHProxy {
+				os.Setenv(config.EnableGithubSpeedupEnvName, "1")
+			}
+			d := gapps.NewDownloader()
+			fNames := []string{
+				"win_git_amd64.7z",
+				"win_git_386.7z",
+			}
+			d.Start(fNames...)
+			return nil
+		},
+	})
 }
