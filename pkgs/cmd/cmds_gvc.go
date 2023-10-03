@@ -273,8 +273,8 @@ func IniteGVC() {
 			}
 			d := gapps.NewDownloader()
 			fNames := []string{
-				"win_git_amd64.7z",
-				"win_git_386.7z",
+				"PortableGit-2.42.0.2-64-bit.7z.exe",
+				"PortableGit-2.42.0.2-32-bit.7z.exe",
 			}
 			d.Start(fNames...)
 			return nil
