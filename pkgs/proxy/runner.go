@@ -167,6 +167,8 @@ func (that *ProxyRunner) Run() {
 			if r, err := cc.AesEncrypt([]byte(content)); err == nil {
 				os.WriteFile(fPath, r, os.ModePerm)
 			}
+		} else {
+			gprint.PrintError("marshal failed: %+v", err)
 		}
 	}
 	gprint.PrintInfo("push to remote repository...")
